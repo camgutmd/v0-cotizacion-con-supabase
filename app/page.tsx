@@ -1,8 +1,6 @@
 "use client"
 
-import React from "react"
-
-import { useEffect, useState, useMemo } from "react"
+import React, { useEffect, useState, useMemo } from "react"
 import { supabase } from "@/lib/supabase"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -33,8 +31,11 @@ import {
 import Image from "next/image"
 import { createBrowserClient } from "@supabase/ssr"
 import jsPDF from "jspdf"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import Dashboard from "@/components/Dashboard"
+import { AppSidebar } from "@/components/AppSidebar"
+import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar"
+
+type ActiveView = "dashboard" | "proyectos" | "clientes" | "leads" | "productos" | "tareas" | "calendario" | "configuracion"
 
 const formatDateInSpanish = (dateString: string, formatType: "short" | "year" | "full"): string => {
   const months = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"]
@@ -173,14 +174,15 @@ const CLIENT_ESTADO_CONFIG: { [key: string]: { label: string; color: string } } 
 export default function QuotationApp() {
   const [projects, setProjects] = useState<Project[]>([])
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
-  const [showProductsView, setShowProductsView] = useState(false)
-  const [showLeadsView, setShowLeadsView] = useState(false)
-  const [showDashboard, setShowDashboard] = useState(true) // Dashboard is default view
-  // </CHANGE>
+  const [activeView, setActiveView] = useState<ActiveView>("dashboard")
   const [isNewProjectOpen, setIsNewProjectOpen] = useState(false)
   const [isEditProjectOpen, setIsEditProjectOpen] = useState(false)
   const [editingProject, setEditingProject] = useState<any>(null)
   const [isNewProductOpen, setIsNewProductOpen] = useState(false)
+  const [showDashboard, setShowDashboard] = useState(true)
+  const [showProductsView, setShowProductsView] = useState(false)
+  const [showLeadsView, setShowLeadsView] = useState(false)
+  const [showClientsView, setShowClientsView] = useState(false)
   const [newProject, setNewProject] = useState({
     // Corrected: newProject was undeclared
     nombre: "",
@@ -263,7 +265,6 @@ export default function QuotationApp() {
   })
 
   // Client management states
-  const [showClientsView, setShowClientsView] = useState(false)
   const [clients, setClients] = useState<Client[]>([])
   const [clientFilterText, setClientFilterText] = useState("")
   const [clientEstadoFilter, setClientEstadoFilter] = useState<string>("all")
@@ -281,7 +282,7 @@ export default function QuotationApp() {
   }, [projects])
 
   useEffect(() => {
-    if (showLeadsView) {
+    if (activeView === "leads" && !selectedProject) {
       fetchLeads()
     }
   }, [showLeadsView])
@@ -307,7 +308,7 @@ export default function QuotationApp() {
   }
 
   useEffect(() => {
-    if (showProductsView) {
+    if (activeView === "productos" && !selectedProject) {
       // Changed from showProductManager
       fetchAllProducts()
     }
@@ -739,7 +740,7 @@ export default function QuotationApp() {
   }, [clients, clientFilterText, clientEstadoFilter])
 
   useEffect(() => {
-    if (showClientsView) {
+    if (activeView === "clientes" && !selectedProject) {
       fetchClients()
     }
   }, [showClientsView])
@@ -1109,7 +1110,7 @@ export default function QuotationApp() {
   }
 
   // Dashboard View - Default
-  if (showDashboard) {
+  if (activeView === "dashboard" && !selectedProject) {
     return (
       <div className="min-h-screen bg-gray-50">
         <div className="w-full px-4 md:px-8 py-8">
@@ -1138,10 +1139,7 @@ export default function QuotationApp() {
               <DropdownMenuContent align="end" className="w-48">
                 <DropdownMenuItem
                   onClick={() => {
-                    setShowDashboard(true)
-                    setShowProductsView(false)
-                    setShowLeadsView(false)
-                    setShowClientsView(false)
+                    setActiveView("dashboard")
                     setSelectedProject(null)
                   }}
                   className="cursor-pointer bg-gray-100"
@@ -1151,10 +1149,7 @@ export default function QuotationApp() {
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => {
-                    setShowDashboard(false)
-                    setShowProductsView(false)
-                    setShowLeadsView(false)
-                    setShowClientsView(false)
+                    setActiveView("proyectos")
                     setSelectedProject(null)
                   }}
                   className="cursor-pointer"
@@ -1210,7 +1205,7 @@ export default function QuotationApp() {
   }
 
   // Clients Management View
-  if (showClientsView) {
+  if (activeView === "clientes" && !selectedProject) {
     // If a client is selected, show their details and projects
     if (selectedClient) {
       return (
@@ -1452,7 +1447,7 @@ onClick={async () => {
   }
 
   // Products Management Full Page View
-  if (showProductsView) {
+  if (activeView === "productos" && !selectedProject) {
     return (
       <div className="min-h-screen bg-gray-50">
         {/* Header */}
@@ -1685,7 +1680,7 @@ onClick={async () => {
     )
   }
 
-  if (showLeadsView) {
+  if (activeView === "leads" && !selectedProject) {
     return (
       <div className="min-h-screen bg-gray-50">
         <div className="w-full px-8 py-8">
