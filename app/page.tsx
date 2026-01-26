@@ -1,8 +1,6 @@
 "use client"
 
-import React from "react"
-
-import { useEffect, useState, useMemo } from "react"
+import React, { useEffect, useState, useMemo } from "react"
 import { supabase } from "@/lib/supabase"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -33,8 +31,11 @@ import {
 import Image from "next/image"
 import { createBrowserClient } from "@supabase/ssr"
 import jsPDF from "jspdf"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import Dashboard from "@/components/Dashboard"
+import { AppSidebar } from "@/components/AppSidebar"
+import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar"
+
+type ActiveView = "dashboard" | "proyectos" | "clientes" | "leads" | "productos" | "tareas" | "calendario" | "configuracion"
 
 const formatDateInSpanish = (dateString: string, formatType: "short" | "year" | "full"): string => {
   const months = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"]
@@ -173,10 +174,7 @@ const CLIENT_ESTADO_CONFIG: { [key: string]: { label: string; color: string } } 
 export default function QuotationApp() {
   const [projects, setProjects] = useState<Project[]>([])
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
-  const [showProductsView, setShowProductsView] = useState(false)
-  const [showLeadsView, setShowLeadsView] = useState(false)
-  const [showDashboard, setShowDashboard] = useState(true) // Dashboard is default view
-  // </CHANGE>
+  const [activeView, setActiveView] = useState<ActiveView>("dashboard")
   const [isNewProjectOpen, setIsNewProjectOpen] = useState(false)
   const [isEditProjectOpen, setIsEditProjectOpen] = useState(false)
   const [editingProject, setEditingProject] = useState<any>(null)
@@ -263,7 +261,6 @@ export default function QuotationApp() {
   })
 
   // Client management states
-  const [showClientsView, setShowClientsView] = useState(false)
   const [clients, setClients] = useState<Client[]>([])
   const [clientFilterText, setClientFilterText] = useState("")
   const [clientEstadoFilter, setClientEstadoFilter] = useState<string>("all")
@@ -281,10 +278,10 @@ export default function QuotationApp() {
   }, [projects])
 
   useEffect(() => {
-    if (showLeadsView) {
+    if (activeView === "leads") {
       fetchLeads()
     }
-  }, [showLeadsView])
+  }, [activeView])
 
   const fetchAllProducts = async () => {
     try {
@@ -307,11 +304,10 @@ export default function QuotationApp() {
   }
 
   useEffect(() => {
-    if (showProductsView) {
-      // Changed from showProductManager
+    if (activeView === "productos") {
       fetchAllProducts()
     }
-  }, [showProductsView]) // Changed from showProductManager
+  }, [activeView])
 
   const fetchLeads = async () => {
     try {
@@ -739,10 +735,10 @@ export default function QuotationApp() {
   }, [clients, clientFilterText, clientEstadoFilter])
 
   useEffect(() => {
-    if (showClientsView) {
+    if (activeView === "clientes") {
       fetchClients()
     }
-  }, [showClientsView])
+  }, [activeView])
 
   const handleEditProject = async (project: any) => {
     // Load clients and leads for dropdown
@@ -912,8 +908,7 @@ export default function QuotationApp() {
       await loadProjects()
 
       // Navigate to clients view
-      setShowLeadsView(false)
-      setShowClientsView(true)
+      setActiveView("clientes")
       alert(`Cliente "${newClient.nombre_empresa}" creado exitosamente!`)
     } catch (error) {
       console.error("Error converting lead:", error)
@@ -1109,140 +1104,85 @@ export default function QuotationApp() {
   }
 
   // Dashboard View - Default
-  if (showDashboard) {
+  if (activeView === "dashboard" && !selectedProject) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <div className="w-full px-4 md:px-8 py-8">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-4">
-              <Image
-                src="/mate-millworkers-logo.jpeg"
-                alt="MateMillWorkers"
-                width={200}
-                height={67}
-                className="h-16 w-auto"
-              />
-              <h1 className="text-3xl font-bold text-[#5BA4B4]">Dashboard</h1>
+      <SidebarProvider>
+        <AppSidebar activeView={activeView} onNavigate={(view) => { setActiveView(view); setSelectedProject(null); }} />
+        <SidebarInset>
+          <div className="min-h-screen bg-gray-50">
+            <div className="w-full px-4 md:px-8 py-8">
+              {/* Header */}
+              <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-4">
+                  <SidebarTrigger className="text-[#5BA4B4]" />
+                  <h1 className="text-3xl font-bold text-[#5BA4B4]">Dashboard</h1>
+                </div>
+                <Image
+                  src="/mate-living-logo.png"
+                  alt="Mate Living"
+                  width={200}
+                  height={24}
+                  className="h-11 w-auto"
+                  priority
+                />
+              </div>
+              
+              {/* Dashboard Content */}
+              <Dashboard />
             </div>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="h-auto w-auto p-2 hover:bg-gray-100">
-                  <div className="flex flex-col justify-center gap-[5px]">
-                    <div className="h-[3px] w-8 rounded-full bg-[#5BA4B4]"></div>
-                    <div className="h-[3px] w-8 rounded-full bg-[#5BA4B4]"></div>
-                    <div className="h-[3px] w-8 rounded-full bg-[#5BA4B4]"></div>
-                  </div>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem
-                  onClick={() => {
-                    setShowDashboard(true)
-                    setShowProductsView(false)
-                    setShowLeadsView(false)
-                    setShowClientsView(false)
-                    setSelectedProject(null)
-                  }}
-                  className="cursor-pointer bg-gray-100"
-                >
-                  <LayoutDashboard className="mr-2 h-4 w-4" />
-                  Dashboard
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => {
-                    setShowDashboard(false)
-                    setShowProductsView(false)
-                    setShowLeadsView(false)
-                    setShowClientsView(false)
-                    setSelectedProject(null)
-                  }}
-                  className="cursor-pointer"
-                >
-                  <FolderOpen className="mr-2 h-4 w-4" />
-                  Proyectos
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => {
-                    setShowDashboard(false)
-                    setShowProductsView(true)
-                    setShowLeadsView(false)
-                    setShowClientsView(false)
-                  }}
-                  className="cursor-pointer"
-                >
-                  <Package className="mr-2 h-4 w-4" />
-                  Productos
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => {
-                    setShowDashboard(false)
-                    setShowLeadsView(true)
-                    setShowProductsView(false)
-                    setShowClientsView(false)
-                  }}
-                  className="cursor-pointer"
-                >
-                  <UserPlus className="mr-2 h-4 w-4" />
-                  Leads
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => {
-                    setShowDashboard(false)
-                    setShowClientsView(true)
-                    setShowProductsView(false)
-                    setShowLeadsView(false)
-                  }}
-                  className="cursor-pointer"
-                >
-                  <Users className="mr-2 h-4 w-4" />
-                  Clientes
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
           </div>
-          
-          {/* Dashboard Content */}
-          <Dashboard />
-        </div>
-      </div>
+        </SidebarInset>
+      </SidebarProvider>
     )
   }
 
   // Clients Management View
-  if (showClientsView) {
+  if (activeView === "clientes" && !selectedProject) {
     // If a client is selected, show their details and projects
     if (selectedClient) {
       return (
-        <div className="min-h-screen bg-gray-50">
-          <div className="w-full px-8 py-8">
-            {/* Header */}
-            <div className="flex items-center justify-between mb-8">
-              <div className="flex items-center gap-4">
-                <Button
-                  variant="ghost"
-                  onClick={() => {
-                    setSelectedClient(null)
-                    setClientProjects([])
-                  }}
-                  className="text-[#5BA4B4] hover:text-[#4A8A98]"
-                >
-                  <ArrowLeft className="mr-2 h-4 w-4" />
-                  Volver a Clientes
-                </Button>
-                <div>
-                  <h1 className="text-3xl font-bold text-[#5BA4B4]">{selectedClient.nombre_empresa}</h1>
-                  <p className="text-gray-500">
-                    {selectedClient.tipo_cliente === "Otro" ? selectedClient.tipo_cliente_otro : selectedClient.tipo_cliente}
-                  </p>
+        <SidebarProvider>
+          <AppSidebar activeView={activeView} onNavigate={(view) => { setActiveView(view); setSelectedProject(null); }} />
+          <SidebarInset>
+            <div className="min-h-screen bg-gray-50">
+              <div className="w-full px-8 py-8">
+                {/* Header */}
+                <div className="flex items-center justify-between mb-8">
+                  <div className="flex items-center gap-4">
+                    <SidebarTrigger className="-ml-1" />
+                    <Button
+                      variant="ghost"
+                      onClick={() => {
+                        setSelectedClient(null)
+                        setClientProjects([])
+                      }}
+                      className="text-[#5BA4B4] hover:text-[#4A8A98]"
+                    >
+                      <ArrowLeft className="mr-2 h-4 w-4" />
+                      Volver a Clientes
+                    </Button>
+                    <div>
+                      <h1 className="text-3xl font-bold text-[#5BA4B4]">{selectedClient.nombre_empresa}</h1>
+                      <p className="text-gray-500">
+                        {selectedClient.tipo_cliente === "Otro" ? selectedClient.tipo_cliente_otro : selectedClient.tipo_cliente}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <span
+                      className={`px-3 py-1 rounded-full text-sm font-medium ${CLIENT_ESTADO_CONFIG[selectedClient.estado]?.color || "bg-gray-100 text-gray-800"}`}
+                    >
+                      {selectedClient.estado}
+                    </span>
+                    <Image
+                      src="/mate-living-logo.png"
+                      alt="Mate Living"
+                      width={200}
+                      height={24}
+                      className="h-11 w-auto"
+                    />
+                  </div>
                 </div>
-              </div>
-              <span
-                className={`px-3 py-1 rounded-full text-sm font-medium ${CLIENT_ESTADO_CONFIG[selectedClient.estado]?.color || "bg-gray-100 text-gray-800"}`}
-              >
-                {selectedClient.estado}
-              </span>
-            </div>
 
             {/* Client Info Card */}
             <Card className="mb-6">
@@ -1329,7 +1269,6 @@ if (!error && newProj) {
                         key={project.id}
                         className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 cursor-pointer"
                         onClick={() => {
-                          setShowClientsView(false)
                           setSelectedClient(null)
                           setSelectedProject(project)
                         }}
@@ -1354,135 +1293,47 @@ if (!error && newProj) {
                 )}
               </CardContent>
             </Card>
-          </div>
-        </div>
+              </div>
+            </div>
+          </SidebarInset>
+        </SidebarProvider>
       )
     }
 
     // Clients list view
     return (
-      <div className="min-h-screen bg-gray-50">
-        <div className="w-full px-8 py-8">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-4">
-              <Button
-                variant="ghost"
-                onClick={() => setShowClientsView(false)}
-                className="text-[#5BA4B4] hover:text-[#4A8A98]"
-              >
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Volver
-              </Button>
-              <h1 className="text-3xl font-bold text-[#5BA4B4]">Gestión de Clientes</h1>
-            </div>
-          </div>
-
-          {/* Filters */}
-          <div className="mb-6 flex flex-wrap gap-4 items-center">
-            <Input
-              placeholder="Buscar clientes..."
-              value={clientFilterText}
-              onChange={(e) => setClientFilterText(e.target.value)}
-              className="max-w-xs"
-            />
-            <Select value={clientEstadoFilter} onValueChange={setClientEstadoFilter}>
-              <SelectTrigger className="w-40">
-                <SelectValue placeholder="Estado" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos los Estados</SelectItem>
-                {Object.keys(CLIENT_ESTADO_CONFIG).map((estado) => (
-                  <SelectItem key={estado} value={estado}>
-                    {estado}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Clients List */}
-          <Card>
-            <CardContent className="p-0">
-              {filteredClients.length === 0 ? (
-                <div className="text-center py-12 text-gray-500">
-                  <Users className="mx-auto h-12 w-12 mb-4 opacity-50" />
-                  <p>No hay clientes registrados.</p>
-                  <p className="text-sm">Los clientes se crean al convertir un lead.</p>
+      <SidebarProvider>
+        <AppSidebar activeView={activeView} onNavigate={(view) => { setActiveView(view); setSelectedProject(null); }} />
+        <SidebarInset>
+          <div className="min-h-screen bg-gray-50">
+            <div className="w-full px-8 py-8">
+              {/* Header */}
+              <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-4">
+                  <SidebarTrigger className="text-[#5BA4B4]" />
+                  <h1 className="text-3xl font-bold text-[#5BA4B4]">Gestión de Productos</h1>
+                  <Button
+                    onClick={() => {
+                      setEditingProductData({}) // Clear previous data
+                      setIsEditingProduct(null) // Ensure no product is marked as editing
+                      setIsAddingProduct(true) // Open the form to add a new product
+                      setShowProductDialog(true) // Open the dialog
+                    }}
+                    className="bg-[#5BA4B4] hover:bg-[#4A8A98] text-white"
+                  >
+                    <Plus className="mr-2 h-4 w-4" />
+                    Nuevo Producto
+                  </Button>
                 </div>
-              ) : (
-                <div className="divide-y">
-                  {filteredClients.map((client) => (
-                    <div
-                      key={client.id}
-                      className="flex items-center justify-between p-4 hover:bg-gray-50 cursor-pointer"
-onClick={async () => {
-  setSelectedClient(client)
-  await loadClientProjects(client.id, client.nombre_empresa)
-  }}
-                    >
-                      <div className="flex-1">
-                        <p className="font-semibold text-lg">{client.nombre_empresa}</p>
-                        <p className="text-sm text-gray-500">
-                          {client.tipo_cliente === "Otro" ? client.tipo_cliente_otro : client.tipo_cliente}
-                          {client.contacto && ` • ${client.contacto}`}
-                        </p>
-                        <p className="text-sm text-gray-400">
-                          {client.email && `${client.email}`}
-                          {client.telefono && ` • ${client.telefono}`}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <span
-                          className={`px-3 py-1 rounded-full text-sm font-medium ${CLIENT_ESTADO_CONFIG[client.estado]?.color || "bg-gray-100 text-gray-800"}`}
-                        >
-                          {client.estado}
-                        </span>
-                        <ArrowRightCircle className="h-5 w-5 text-gray-400" />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    )
-  }
-
-  // Products Management Full Page View
-  if (showProductsView) {
-    return (
-      <div className="min-h-screen bg-gray-50">
-        {/* Header */}
-        <div className="bg-white border-b border-gray-200 px-8 py-6 mb-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Button
-                variant="ghost"
-                onClick={() => setShowProductsView(false)}
-                className="text-[#5BA4B4] hover:text-[#4A8A98] hover:bg-[#5BA4B4]/10"
-              >
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Volver
-              </Button>
-              <h1 className="text-3xl font-bold text-[#5BA4B4]">Gestión de Productos</h1>
+                <Image
+                  src="/mate-living-logo.png"
+                  alt="Mate Living"
+                  width={200}
+                  height={24}
+                  className="h-11 w-auto"
+                />
+              </div>
             </div>
-            <Button
-              onClick={() => {
-                setEditingProductData({}) // Clear previous data
-                setIsEditingProduct(null) // Ensure no product is marked as editing
-                setIsAddingProduct(true) // Open the form to add a new product
-                setShowProductDialog(true) // Open the dialog
-              }}
-              className="bg-[#5BA4B4] hover:bg-[#4A8A98] text-white"
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              Nuevo Producto
-            </Button>
-          </div>
-        </div>
 
         <div className="px-8">
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
@@ -1681,32 +1532,39 @@ onClick={async () => {
           onSave={isEditingProduct ? () => handleUpdateProductAPI(isEditingProduct) : handleCreateProductAPI}
           initialProductData={isEditingProduct ? editingProductData : newProductData}
         />
-      </div>
+          </div>
+        </SidebarInset>
+      </SidebarProvider>
     )
   }
 
-  if (showLeadsView) {
+  if (activeView === "leads" && !selectedProject) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <div className="w-full px-8 py-8">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-4">
-              <Button
-                variant="ghost"
-                onClick={() => setShowLeadsView(false)}
-                className="text-[#5BA4B4] hover:text-[#4A8A98]"
-              >
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Volver
-              </Button>
-              <h1 className="text-3xl font-bold text-[#5BA4B4]">Gestión de Leads</h1>
+      <SidebarProvider>
+        <AppSidebar activeView={activeView} onNavigate={(view) => { setActiveView(view); setSelectedProject(null); }} />
+        <SidebarInset>
+          <div className="min-h-screen bg-gray-50">
+            <div className="w-full px-8 py-8">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center gap-4">
+                <SidebarTrigger className="text-[#5BA4B4]" />
+                <h1 className="text-3xl font-bold text-[#5BA4B4]">Gestión de Leads</h1>
+              </div>
+              <div className="flex items-center gap-4">
+                <Button onClick={() => setShowNewLeadDialog(true)} className="bg-[#5BA4B4] hover:bg-[#4A8A98] text-white">
+                  <UserPlus className="mr-2 h-4 w-4" />
+                  Nuevo Lead
+                </Button>
+                <Image
+                  src="/mate-living-logo.png"
+                  alt="Mate Living"
+                  width={200}
+                  height={24}
+                  className="h-11 w-auto"
+                />
+              </div>
             </div>
-            <Button onClick={() => setShowNewLeadDialog(true)} className="bg-[#5BA4B4] hover:bg-[#4A8A98] text-white">
-              <UserPlus className="mr-2 h-4 w-4" />
-              Nuevo Lead
-            </Button>
-          </div>
 
           {/* Filters */}
           <div className="mb-6 flex flex-wrap gap-4 items-center">
@@ -2185,7 +2043,9 @@ onClick={async () => {
             )}
           </DialogContent>
         </Dialog>
-      </div>
+          </div>
+        </SidebarInset>
+      </SidebarProvider>
     )
   }
 
@@ -2204,98 +2064,26 @@ onClick={async () => {
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Projects View */}
-      <div className="w-full px-8 py-8">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-4">
-            <Image
-              src="/mate-millworkers-logo.jpeg"
-              alt="MateMillWorkers"
-              width={200}
-              height={67}
-              className="h-16 w-auto"
-            />
-            {/* </CHANGE> */}
-            <h1 className="text-3xl font-bold text-[#5BA4B4]">Sistema de Cotización</h1>
-          </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-auto w-auto p-2 hover:bg-gray-100">
-                <div className="flex flex-col justify-center gap-[5px]">
-                  <div className="h-[3px] w-8 rounded-full bg-[#5BA4B4]"></div>
-                  <div className="h-[3px] w-8 rounded-full bg-[#5BA4B4]"></div>
-                  <div className="h-[3px] w-8 rounded-full bg-[#5BA4B4]"></div>
-                </div>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuItem
-                onClick={() => {
-                  setShowDashboard(true)
-                  setShowProductsView(false)
-                  setShowLeadsView(false)
-                  setShowClientsView(false)
-                  setSelectedProject(null)
-                }}
-                className="cursor-pointer"
-              >
-                <LayoutDashboard className="mr-2 h-4 w-4" />
-                Dashboard
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => {
-                  setShowDashboard(false)
-                  setShowProductsView(false)
-                  setShowLeadsView(false)
-                  setShowClientsView(false)
-                  setSelectedProject(null)
-                }}
-                className="cursor-pointer"
-              >
-                <FolderOpen className="mr-2 h-4 w-4" />
-                Proyectos
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => {
-                  setShowDashboard(false)
-                  setShowProductsView(true)
-                  setShowLeadsView(false)
-                  setShowClientsView(false)
-                }}
-                className="cursor-pointer"
-              >
-                <Package className="mr-2 h-4 w-4" />
-                Productos
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => {
-                  setShowDashboard(false)
-                  setShowLeadsView(true)
-                  setShowProductsView(false)
-                  setShowClientsView(false)
-                }}
-                className="cursor-pointer"
-              >
-                <UserPlus className="mr-2 h-4 w-4" />
-                Leads
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => {
-                  setShowDashboard(false)
-                  setShowClientsView(true)
-                  setShowProductsView(false)
-                  setShowLeadsView(false)
-                }}
-                className="cursor-pointer"
-              >
-                <Users className="mr-2 h-4 w-4" />
-                Clientes
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
+    <SidebarProvider>
+      <AppSidebar activeView={activeView} onNavigate={(view) => { setActiveView(view); setSelectedProject(null); }} />
+      <SidebarInset>
+        <div className="min-h-screen bg-white">
+          {/* Projects View */}
+          <div className="w-full px-8 py-8">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center gap-4">
+                <SidebarTrigger className="text-[#5BA4B4]" />
+                <h1 className="text-3xl font-bold text-[#5BA4B4]">Proyectos</h1>
+              </div>
+              <Image
+                src="/mate-living-logo.png"
+                alt="Mate Living"
+                width={200}
+                height={24}
+                className="h-11 w-auto"
+              />
+            </div>
 
         <div className="mb-6 space-y-4">
           <div className="flex gap-4 items-center">
@@ -3044,7 +2832,9 @@ onClick={async () => {
         onSave={isEditingProduct ? () => handleUpdateProductAPI(isEditingProduct) : handleCreateProductAPI}
         initialProductData={isEditingProduct ? editingProductData : newProductData}
       />
-    </div>
+      </div>
+      </SidebarInset>
+    </SidebarProvider>
   )
 }
 
@@ -3282,7 +3072,7 @@ function ProjectDetailView({
         logoImg.onerror = (err) => {
           reject(err)
         }
-        logoImg.src = "/mate-millworkers-logo.jpeg"
+        logoImg.src = "/mate-living-logo.png"
       })
     } catch (error) {
       pdf.setFontSize(16)
