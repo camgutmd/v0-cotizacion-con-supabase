@@ -278,10 +278,10 @@ export default function QuotationApp() {
   }, [projects])
 
   useEffect(() => {
-    if (activeView === "leads" && !selectedProject) {
+    if (activeView === "leads") {
       fetchLeads()
     }
-  }, [activeView, selectedProject])
+  }, [activeView])
 
   const fetchAllProducts = async () => {
     try {
@@ -304,10 +304,10 @@ export default function QuotationApp() {
   }
 
   useEffect(() => {
-    if (activeView === "productos" && !selectedProject) {
+    if (activeView === "productos") {
       fetchAllProducts()
     }
-  }, [activeView, selectedProject])
+  }, [activeView])
 
   const fetchLeads = async () => {
     try {
@@ -735,10 +735,10 @@ export default function QuotationApp() {
   }, [clients, clientFilterText, clientEstadoFilter])
 
   useEffect(() => {
-    if (activeView === "clientes" && !selectedProject) {
+    if (activeView === "clientes") {
       fetchClients()
     }
-  }, [showClientsView])
+  }, [activeView])
 
   const handleEditProject = async (project: any) => {
     // Load clients and leads for dropdown
@@ -2912,7 +2912,9 @@ onClick={async () => {
         onSave={isEditingProduct ? () => handleUpdateProductAPI(isEditingProduct) : handleCreateProductAPI}
         initialProductData={isEditingProduct ? editingProductData : newProductData}
       />
-    </div>
+      </div>
+      </SidebarInset>
+    </SidebarProvider>
   )
 }
 
@@ -4228,8 +4230,6 @@ function ProjectDetailView({
           </div>
         </DialogContent>
       </Dialog>
-        </div>
-      </SidebarInset>
-    </SidebarProvider>
+    </div>
   )
 }
