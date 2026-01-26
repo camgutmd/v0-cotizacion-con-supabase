@@ -52,13 +52,14 @@ export function AppSidebar({ activeView, onNavigate }: AppSidebarProps) {
   return (
     <Sidebar className="border-r border-gray-200">
       <SidebarHeader className="p-4 border-b border-gray-100">
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center py-2">
           <Image
             src="/mate-living-logo.png"
             alt="Mate Living"
-            width={200}
-            height={200}
-            className="w-full max-w-[180px] h-auto object-contain"
+            width={180}
+            height={22}
+            className="w-auto h-6"
+            priority
           />
         </div>
       </SidebarHeader>
