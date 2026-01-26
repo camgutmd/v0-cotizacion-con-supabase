@@ -152,7 +152,7 @@ export function AppSidebar({ activeView, onNavigate }: AppSidebarProps) {
 
       <SidebarFooter className="p-4 border-t border-gray-100">
         <p className="text-xs text-gray-400 text-center">
-          Mate MillWorkers © 2025
+          Mate MillWorkers © 2026
         </p>
       </SidebarFooter>
     </Sidebar>
