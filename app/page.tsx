@@ -1112,9 +1112,19 @@ export default function QuotationApp() {
           <div className="min-h-screen bg-gray-50">
             <div className="w-full px-4 md:px-8 py-8">
               {/* Header */}
-              <div className="flex items-center gap-4 mb-8">
-                <SidebarTrigger className="text-[#5BA4B4]" />
-                <h1 className="text-3xl font-bold text-[#5BA4B4]">Dashboard</h1>
+              <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-4">
+                  <SidebarTrigger className="text-[#5BA4B4]" />
+                  <h1 className="text-3xl font-bold text-[#5BA4B4]">Dashboard</h1>
+                </div>
+                <Image
+                  src="/mate-living-logo.png"
+                  alt="Mate Living"
+                  width={200}
+                  height={24}
+                  className="h-11 w-auto"
+                  priority
+                />
               </div>
               
               {/* Dashboard Content */}
@@ -1158,11 +1168,20 @@ export default function QuotationApp() {
                       </p>
                     </div>
                   </div>
-                  <span
-                    className={`px-3 py-1 rounded-full text-sm font-medium ${CLIENT_ESTADO_CONFIG[selectedClient.estado]?.color || "bg-gray-100 text-gray-800"}`}
-                  >
-                    {selectedClient.estado}
-                  </span>
+                  <div className="flex items-center gap-4">
+                    <span
+                      className={`px-3 py-1 rounded-full text-sm font-medium ${CLIENT_ESTADO_CONFIG[selectedClient.estado]?.color || "bg-gray-100 text-gray-800"}`}
+                    >
+                      {selectedClient.estado}
+                    </span>
+                    <Image
+                      src="/mate-living-logo.png"
+                      alt="Mate Living"
+                      width={200}
+                      height={24}
+                      className="h-11 w-auto"
+                    />
+                  </div>
                 </div>
 
             {/* Client Info Card */}
@@ -1289,20 +1308,30 @@ if (!error && newProj) {
           <div className="min-h-screen bg-gray-50">
             <div className="w-full px-8 py-8">
               {/* Header */}
-              <div className="flex items-center gap-4 mb-8">
-                <SidebarTrigger className="text-[#5BA4B4]" />
-                <Button
-                  onClick={() => {
-                    setEditingProductData({}) // Clear previous data
-                    setIsEditingProduct(null) // Ensure no product is marked as editing
-                    setIsAddingProduct(true) // Open the form to add a new product
-                    setShowProductDialog(true) // Open the dialog
-                  }}
-                  className="bg-[#5BA4B4] hover:bg-[#4A8A98] text-white"
-                >
-                  <Plus className="mr-2 h-4 w-4" />
-                  Nuevo Producto
-                </Button>
+              <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-4">
+                  <SidebarTrigger className="text-[#5BA4B4]" />
+                  <h1 className="text-3xl font-bold text-[#5BA4B4]">Gestión de Productos</h1>
+                  <Button
+                    onClick={() => {
+                      setEditingProductData({}) // Clear previous data
+                      setIsEditingProduct(null) // Ensure no product is marked as editing
+                      setIsAddingProduct(true) // Open the form to add a new product
+                      setShowProductDialog(true) // Open the dialog
+                    }}
+                    className="bg-[#5BA4B4] hover:bg-[#4A8A98] text-white"
+                  >
+                    <Plus className="mr-2 h-4 w-4" />
+                    Nuevo Producto
+                  </Button>
+                </div>
+                <Image
+                  src="/mate-living-logo.png"
+                  alt="Mate Living"
+                  width={200}
+                  height={24}
+                  className="h-11 w-auto"
+                />
               </div>
             </div>
 
@@ -1516,17 +1545,26 @@ if (!error && newProj) {
         <SidebarInset>
           <div className="min-h-screen bg-gray-50">
             <div className="w-full px-8 py-8">
-              {/* Header */}
-              <div className="flex items-center justify-between mb-8">
-                <div className="flex items-center gap-4">
-<SidebarTrigger className="text-[#5BA4B4]" />
-                  <h1 className="text-3xl font-bold text-[#5BA4B4]">Gestión de Leads</h1>
-                </div>
+            {/* Header */}
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center gap-4">
+                <SidebarTrigger className="text-[#5BA4B4]" />
+                <h1 className="text-3xl font-bold text-[#5BA4B4]">Gestión de Leads</h1>
+              </div>
+              <div className="flex items-center gap-4">
                 <Button onClick={() => setShowNewLeadDialog(true)} className="bg-[#5BA4B4] hover:bg-[#4A8A98] text-white">
                   <UserPlus className="mr-2 h-4 w-4" />
                   Nuevo Lead
                 </Button>
+                <Image
+                  src="/mate-living-logo.png"
+                  alt="Mate Living"
+                  width={200}
+                  height={24}
+                  className="h-11 w-auto"
+                />
               </div>
+            </div>
 
           {/* Filters */}
           <div className="mb-6 flex flex-wrap gap-4 items-center">
@@ -2033,9 +2071,18 @@ if (!error && newProj) {
           {/* Projects View */}
           <div className="w-full px-8 py-8">
             {/* Header */}
-            <div className="flex items-center gap-4 mb-8">
-              <SidebarTrigger className="text-[#5BA4B4]" />
-              <h1 className="text-3xl font-bold text-[#5BA4B4]">Proyectos</h1>
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center gap-4">
+                <SidebarTrigger className="text-[#5BA4B4]" />
+                <h1 className="text-3xl font-bold text-[#5BA4B4]">Proyectos</h1>
+              </div>
+              <Image
+                src="/mate-living-logo.png"
+                alt="Mate Living"
+                width={200}
+                height={24}
+                className="h-11 w-auto"
+              />
             </div>
 
         <div className="mb-6 space-y-4">
