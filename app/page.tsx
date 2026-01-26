@@ -278,10 +278,10 @@ export default function QuotationApp() {
   }, [projects])
 
   useEffect(() => {
-    if (activeView === "leads") {
+    if (activeView === "leads" && !selectedProject) {
       fetchLeads()
     }
-  }, [activeView])
+  }, [activeView, selectedProject])
 
   const fetchAllProducts = async () => {
     try {
@@ -304,10 +304,10 @@ export default function QuotationApp() {
   }
 
   useEffect(() => {
-    if (activeView === "productos") {
+    if (activeView === "productos" && !selectedProject) {
       fetchAllProducts()
     }
-  }, [activeView])
+  }, [activeView, selectedProject])
 
   const fetchLeads = async () => {
     try {
@@ -735,10 +735,10 @@ export default function QuotationApp() {
   }, [clients, clientFilterText, clientEstadoFilter])
 
   useEffect(() => {
-    if (activeView === "clientes") {
+    if (activeView === "clientes" && !selectedProject) {
       fetchClients()
     }
-  }, [activeView])
+  }, [showClientsView])
 
   const handleEditProject = async (project: any) => {
     // Load clients and leads for dropdown
@@ -1108,16 +1108,25 @@ export default function QuotationApp() {
     return (
       <SidebarProvider>
         <AppSidebar activeView={activeView} onNavigate={(view) => { setActiveView(view); setSelectedProject(null); }} />
-        <SidebarInset className="bg-gray-50">
-          <div className="w-full px-4 md:px-8 py-8">
-            {/* Header */}
-            <div className="flex items-center gap-4 mb-8">
-              <SidebarTrigger className="text-[#5BA4B4]" />
-              <h1 className="text-3xl font-bold text-[#5BA4B4]">Dashboard</h1>
+        <SidebarInset>
+          <div className="min-h-screen bg-gray-50">
+            <div className="w-full px-4 md:px-8 py-8">
+              {/* Header */}
+              <div className="flex items-center gap-4 mb-8">
+                <SidebarTrigger className="-ml-1" />
+                <Image
+                  src="/mate-millworkers-logo.jpeg"
+                  alt="MateMillWorkers"
+                  width={200}
+                  height={67}
+                  className="h-12 w-auto"
+                />
+                <h1 className="text-3xl font-bold text-[#5BA4B4]">Dashboard</h1>
+              </div>
+              
+              {/* Dashboard Content */}
+              <Dashboard />
             </div>
-            
-            {/* Dashboard Content */}
-            <Dashboard />
           </div>
         </SidebarInset>
       </SidebarProvider>
@@ -1130,37 +1139,38 @@ export default function QuotationApp() {
     if (selectedClient) {
       return (
         <SidebarProvider>
-          <AppSidebar activeView={activeView} onNavigate={(view) => { setActiveView(view); setSelectedProject(null); setSelectedClient(null); }} />
-          <SidebarInset className="bg-gray-50">
-            <div className="w-full px-8 py-8">
-              {/* Header */}
-              <div className="flex items-center justify-between mb-8">
-                <div className="flex items-center gap-4">
-                  <SidebarTrigger className="text-[#5BA4B4]" />
-                  <Button
-                    variant="ghost"
-                    onClick={() => {
-                      setSelectedClient(null)
-                      setClientProjects([])
-                    }}
-                    className="text-[#5BA4B4] hover:text-[#4A8A98]"
-                  >
-                    <ArrowLeft className="mr-2 h-4 w-4" />
-                    Volver a Clientes
-                  </Button>
-                  <div>
-                    <h1 className="text-3xl font-bold text-[#5BA4B4]">{selectedClient.nombre_empresa}</h1>
-                    <p className="text-gray-500">
-                      {selectedClient.tipo_cliente === "Otro" ? selectedClient.tipo_cliente_otro : selectedClient.tipo_cliente}
-                    </p>
+          <AppSidebar activeView={activeView} onNavigate={(view) => { setActiveView(view); setSelectedProject(null); }} />
+          <SidebarInset>
+            <div className="min-h-screen bg-gray-50">
+              <div className="w-full px-8 py-8">
+                {/* Header */}
+                <div className="flex items-center justify-between mb-8">
+                  <div className="flex items-center gap-4">
+                    <SidebarTrigger className="-ml-1" />
+                    <Button
+                      variant="ghost"
+                      onClick={() => {
+                        setSelectedClient(null)
+                        setClientProjects([])
+                      }}
+                      className="text-[#5BA4B4] hover:text-[#4A8A98]"
+                    >
+                      <ArrowLeft className="mr-2 h-4 w-4" />
+                      Volver a Clientes
+                    </Button>
+                    <div>
+                      <h1 className="text-3xl font-bold text-[#5BA4B4]">{selectedClient.nombre_empresa}</h1>
+                      <p className="text-gray-500">
+                        {selectedClient.tipo_cliente === "Otro" ? selectedClient.tipo_cliente_otro : selectedClient.tipo_cliente}
+                      </p>
+                    </div>
                   </div>
+                  <span
+                    className={`px-3 py-1 rounded-full text-sm font-medium ${CLIENT_ESTADO_CONFIG[selectedClient.estado]?.color || "bg-gray-100 text-gray-800"}`}
+                  >
+                    {selectedClient.estado}
+                  </span>
                 </div>
-                <span
-                  className={`px-3 py-1 rounded-full text-sm font-medium ${CLIENT_ESTADO_CONFIG[selectedClient.estado]?.color || "bg-gray-100 text-gray-800"}`}
-                >
-                  {selectedClient.estado}
-                </span>
-              </div>
 
             {/* Client Info Card */}
             <Card className="mb-6">
@@ -1247,7 +1257,6 @@ if (!error && newProj) {
                         key={project.id}
                         className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 cursor-pointer"
                         onClick={() => {
-                          setActiveView("proyectos")
                           setSelectedClient(null)
                           setSelectedProject(project)
                         }}
@@ -1272,6 +1281,7 @@ if (!error && newProj) {
                 )}
               </CardContent>
             </Card>
+              </div>
             </div>
           </SidebarInset>
         </SidebarProvider>
@@ -1282,13 +1292,21 @@ if (!error && newProj) {
     return (
       <SidebarProvider>
         <AppSidebar activeView={activeView} onNavigate={(view) => { setActiveView(view); setSelectedProject(null); }} />
-        <SidebarInset className="bg-gray-50">
-          <div className="w-full px-8 py-8">
-            {/* Header */}
-            <div className="flex items-center gap-4 mb-8">
-              <SidebarTrigger className="text-[#5BA4B4]" />
-              <h1 className="text-3xl font-bold text-[#5BA4B4]">Gestión de Clientes</h1>
-            </div>
+        <SidebarInset>
+          <div className="min-h-screen bg-gray-50">
+            <div className="w-full px-8 py-8">
+              {/* Header */}
+              <div className="flex items-center gap-4 mb-8">
+                <SidebarTrigger className="-ml-1" />
+                <Image
+                  src="/mate-millworkers-logo.jpeg"
+                  alt="MateMillWorkers"
+                  width={200}
+                  height={67}
+                  className="h-12 w-auto"
+                />
+                <h1 className="text-3xl font-bold text-[#5BA4B4]">Gestión de Clientes</h1>
+              </div>
 
           {/* Filters */}
           <div className="mb-6 flex flex-wrap gap-4 items-center">
@@ -1358,6 +1376,7 @@ onClick={async () => {
               )}
             </CardContent>
           </Card>
+            </div>
           </div>
         </SidebarInset>
       </SidebarProvider>
@@ -1369,28 +1388,36 @@ onClick={async () => {
     return (
       <SidebarProvider>
         <AppSidebar activeView={activeView} onNavigate={(view) => { setActiveView(view); setSelectedProject(null); }} />
-        <SidebarInset className="bg-gray-50">
-          {/* Header */}
-          <div className="bg-white border-b border-gray-200 px-8 py-6 mb-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <SidebarTrigger className="text-[#5BA4B4]" />
-                <h1 className="text-3xl font-bold text-[#5BA4B4]">Gestión de Productos</h1>
+        <SidebarInset>
+          <div className="min-h-screen bg-gray-50">
+            {/* Header */}
+            <div className="bg-white border-b border-gray-200 px-8 py-6 mb-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <SidebarTrigger className="-ml-1" />
+                  <Image
+                    src="/mate-millworkers-logo.jpeg"
+                    alt="MateMillWorkers"
+                    width={200}
+                    height={67}
+                    className="h-12 w-auto"
+                  />
+                  <h1 className="text-3xl font-bold text-[#5BA4B4]">Gestión de Productos</h1>
+                </div>
+                <Button
+                  onClick={() => {
+                    setEditingProductData({}) // Clear previous data
+                    setIsEditingProduct(null) // Ensure no product is marked as editing
+                    setIsAddingProduct(true) // Open the form to add a new product
+                    setShowProductDialog(true) // Open the dialog
+                  }}
+                  className="bg-[#5BA4B4] hover:bg-[#4A8A98] text-white"
+                >
+                  <Plus className="mr-2 h-4 w-4" />
+                  Nuevo Producto
+                </Button>
               </div>
-            <Button
-              onClick={() => {
-                setEditingProductData({}) // Clear previous data
-                setIsEditingProduct(null) // Ensure no product is marked as editing
-                setIsAddingProduct(true) // Open the form to add a new product
-                setShowProductDialog(true) // Open the dialog
-              }}
-              className="bg-[#5BA4B4] hover:bg-[#4A8A98] text-white"
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              Nuevo Producto
-            </Button>
-          </div>
-        </div>
+            </div>
 
         <div className="px-8">
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
@@ -1589,6 +1616,7 @@ onClick={async () => {
           onSave={isEditingProduct ? () => handleUpdateProductAPI(isEditingProduct) : handleCreateProductAPI}
           initialProductData={isEditingProduct ? editingProductData : newProductData}
         />
+          </div>
         </SidebarInset>
       </SidebarProvider>
     )
@@ -1598,19 +1626,27 @@ onClick={async () => {
     return (
       <SidebarProvider>
         <AppSidebar activeView={activeView} onNavigate={(view) => { setActiveView(view); setSelectedProject(null); }} />
-        <SidebarInset className="bg-gray-50">
-          <div className="w-full px-8 py-8">
-            {/* Header */}
-            <div className="flex items-center justify-between mb-8">
-              <div className="flex items-center gap-4">
-                <SidebarTrigger className="text-[#5BA4B4]" />
-                <h1 className="text-3xl font-bold text-[#5BA4B4]">Gestión de Leads</h1>
+        <SidebarInset>
+          <div className="min-h-screen bg-gray-50">
+            <div className="w-full px-8 py-8">
+              {/* Header */}
+              <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-4">
+                  <SidebarTrigger className="-ml-1" />
+                  <Image
+                    src="/mate-millworkers-logo.jpeg"
+                    alt="MateMillWorkers"
+                    width={200}
+                    height={67}
+                    className="h-12 w-auto"
+                  />
+                  <h1 className="text-3xl font-bold text-[#5BA4B4]">Gestión de Leads</h1>
+                </div>
+                <Button onClick={() => setShowNewLeadDialog(true)} className="bg-[#5BA4B4] hover:bg-[#4A8A98] text-white">
+                  <UserPlus className="mr-2 h-4 w-4" />
+                  Nuevo Lead
+                </Button>
               </div>
-              <Button onClick={() => setShowNewLeadDialog(true)} className="bg-[#5BA4B4] hover:bg-[#4A8A98] text-white">
-                <UserPlus className="mr-2 h-4 w-4" />
-                Nuevo Lead
-              </Button>
-            </div>
 
           {/* Filters */}
           <div className="mb-6 flex flex-wrap gap-4 items-center">
@@ -2109,19 +2145,25 @@ onClick={async () => {
     )
   }
 
-  // Projects list view (default when activeView is "proyectos" or fallback)
   return (
     <SidebarProvider>
       <AppSidebar activeView={activeView} onNavigate={(view) => { setActiveView(view); setSelectedProject(null); }} />
-      <SidebarInset className="bg-white">
-        <div className="w-full px-8 py-8">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-4">
-              <SidebarTrigger className="text-[#5BA4B4]" />
+      <SidebarInset>
+        <div className="min-h-screen bg-white">
+          {/* Projects View */}
+          <div className="w-full px-8 py-8">
+            {/* Header */}
+            <div className="flex items-center gap-4 mb-8">
+              <SidebarTrigger className="-ml-1" />
+              <Image
+                src="/mate-millworkers-logo.jpeg"
+                alt="MateMillWorkers"
+                width={200}
+                height={67}
+                className="h-12 w-auto"
+              />
               <h1 className="text-3xl font-bold text-[#5BA4B4]">Proyectos</h1>
             </div>
-          </div>
 
         <div className="mb-6 space-y-4">
           <div className="flex gap-4 items-center">
@@ -2870,9 +2912,7 @@ onClick={async () => {
         onSave={isEditingProduct ? () => handleUpdateProductAPI(isEditingProduct) : handleCreateProductAPI}
         initialProductData={isEditingProduct ? editingProductData : newProductData}
       />
-        </div>
-      </SidebarInset>
-    </SidebarProvider>
+    </div>
   )
 }
 
@@ -4188,6 +4228,8 @@ function ProjectDetailView({
           </div>
         </DialogContent>
       </Dialog>
-    </div>
+        </div>
+      </SidebarInset>
+    </SidebarProvider>
   )
 }
