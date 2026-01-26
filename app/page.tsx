@@ -1113,14 +1113,7 @@ export default function QuotationApp() {
             <div className="w-full px-4 md:px-8 py-8">
               {/* Header */}
               <div className="flex items-center gap-4 mb-8">
-                <SidebarTrigger className="-ml-1" />
-                <Image
-                  src="/mate-millworkers-logo.jpeg"
-                  alt="MateMillWorkers"
-                  width={200}
-                  height={67}
-                  className="h-12 w-auto"
-                />
+                <SidebarTrigger className="text-[#5BA4B4]" />
                 <h1 className="text-3xl font-bold text-[#5BA4B4]">Dashboard</h1>
               </div>
               
@@ -1297,113 +1290,7 @@ if (!error && newProj) {
             <div className="w-full px-8 py-8">
               {/* Header */}
               <div className="flex items-center gap-4 mb-8">
-                <SidebarTrigger className="-ml-1" />
-                <Image
-                  src="/mate-millworkers-logo.jpeg"
-                  alt="MateMillWorkers"
-                  width={200}
-                  height={67}
-                  className="h-12 w-auto"
-                />
-                <h1 className="text-3xl font-bold text-[#5BA4B4]">Gestión de Clientes</h1>
-              </div>
-
-          {/* Filters */}
-          <div className="mb-6 flex flex-wrap gap-4 items-center">
-            <Input
-              placeholder="Buscar clientes..."
-              value={clientFilterText}
-              onChange={(e) => setClientFilterText(e.target.value)}
-              className="max-w-xs"
-            />
-            <Select value={clientEstadoFilter} onValueChange={setClientEstadoFilter}>
-              <SelectTrigger className="w-40">
-                <SelectValue placeholder="Estado" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos los Estados</SelectItem>
-                {Object.keys(CLIENT_ESTADO_CONFIG).map((estado) => (
-                  <SelectItem key={estado} value={estado}>
-                    {estado}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Clients List */}
-          <Card>
-            <CardContent className="p-0">
-              {filteredClients.length === 0 ? (
-                <div className="text-center py-12 text-gray-500">
-                  <Users className="mx-auto h-12 w-12 mb-4 opacity-50" />
-                  <p>No hay clientes registrados.</p>
-                  <p className="text-sm">Los clientes se crean al convertir un lead.</p>
-                </div>
-              ) : (
-                <div className="divide-y">
-                  {filteredClients.map((client) => (
-                    <div
-                      key={client.id}
-                      className="flex items-center justify-between p-4 hover:bg-gray-50 cursor-pointer"
-onClick={async () => {
-  setSelectedClient(client)
-  await loadClientProjects(client.id, client.nombre_empresa)
-  }}
-                    >
-                      <div className="flex-1">
-                        <p className="font-semibold text-lg">{client.nombre_empresa}</p>
-                        <p className="text-sm text-gray-500">
-                          {client.tipo_cliente === "Otro" ? client.tipo_cliente_otro : client.tipo_cliente}
-                          {client.contacto && ` • ${client.contacto}`}
-                        </p>
-                        <p className="text-sm text-gray-400">
-                          {client.email && `${client.email}`}
-                          {client.telefono && ` • ${client.telefono}`}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <span
-                          className={`px-3 py-1 rounded-full text-sm font-medium ${CLIENT_ESTADO_CONFIG[client.estado]?.color || "bg-gray-100 text-gray-800"}`}
-                        >
-                          {client.estado}
-                        </span>
-                        <ArrowRightCircle className="h-5 w-5 text-gray-400" />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-            </div>
-          </div>
-        </SidebarInset>
-      </SidebarProvider>
-    )
-  }
-
-  // Products Management Full Page View
-  if (activeView === "productos" && !selectedProject) {
-    return (
-      <SidebarProvider>
-        <AppSidebar activeView={activeView} onNavigate={(view) => { setActiveView(view); setSelectedProject(null); }} />
-        <SidebarInset>
-          <div className="min-h-screen bg-gray-50">
-            {/* Header */}
-            <div className="bg-white border-b border-gray-200 px-8 py-6 mb-6">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <SidebarTrigger className="-ml-1" />
-                  <Image
-                    src="/mate-millworkers-logo.jpeg"
-                    alt="MateMillWorkers"
-                    width={200}
-                    height={67}
-                    className="h-12 w-auto"
-                  />
-                  <h1 className="text-3xl font-bold text-[#5BA4B4]">Gestión de Productos</h1>
-                </div>
+                <SidebarTrigger className="text-[#5BA4B4]" />
                 <Button
                   onClick={() => {
                     setEditingProductData({}) // Clear previous data
@@ -1632,14 +1519,7 @@ onClick={async () => {
               {/* Header */}
               <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center gap-4">
-                  <SidebarTrigger className="-ml-1" />
-                  <Image
-                    src="/mate-millworkers-logo.jpeg"
-                    alt="MateMillWorkers"
-                    width={200}
-                    height={67}
-                    className="h-12 w-auto"
-                  />
+<SidebarTrigger className="text-[#5BA4B4]" />
                   <h1 className="text-3xl font-bold text-[#5BA4B4]">Gestión de Leads</h1>
                 </div>
                 <Button onClick={() => setShowNewLeadDialog(true)} className="bg-[#5BA4B4] hover:bg-[#4A8A98] text-white">
@@ -2154,14 +2034,7 @@ onClick={async () => {
           <div className="w-full px-8 py-8">
             {/* Header */}
             <div className="flex items-center gap-4 mb-8">
-              <SidebarTrigger className="-ml-1" />
-              <Image
-                src="/mate-millworkers-logo.jpeg"
-                alt="MateMillWorkers"
-                width={200}
-                height={67}
-                className="h-12 w-auto"
-              />
+              <SidebarTrigger className="text-[#5BA4B4]" />
               <h1 className="text-3xl font-bold text-[#5BA4B4]">Proyectos</h1>
             </div>
 
@@ -3152,7 +3025,7 @@ function ProjectDetailView({
         logoImg.onerror = (err) => {
           reject(err)
         }
-        logoImg.src = "/mate-millworkers-logo.jpeg"
+        logoImg.src = "/mate-living-logo.png"
       })
     } catch (error) {
       pdf.setFontSize(16)

@@ -53,11 +53,11 @@ export function AppSidebar({ activeView, onNavigate }: AppSidebarProps) {
     <Sidebar className="border-r border-gray-200">
       <SidebarHeader className="p-4 border-b border-gray-100">
         <Image
-          src="/mate-millworkers-logo.jpeg"
-          alt="MateMillWorkers"
+          src="/mate-living-logo.png"
+          alt="Mate Living"
           width={180}
           height={60}
-          className="h-12 w-auto"
+          className="h-10 w-auto"
         />
       </SidebarHeader>
       
@@ -152,7 +152,7 @@ export function AppSidebar({ activeView, onNavigate }: AppSidebarProps) {
 
       <SidebarFooter className="p-4 border-t border-gray-100">
         <p className="text-xs text-gray-400 text-center">
-          Mate MillWorkers © 2025
+          Mate Living © 2026
         </p>
       </SidebarFooter>
     </Sidebar>
