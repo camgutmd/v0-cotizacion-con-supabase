@@ -1551,25 +1551,19 @@ if (!error && newProj) {
                 <SidebarTrigger className="text-[#5BA4B4]" />
                 <h1 className="text-3xl font-bold text-[#5BA4B4]">Gestión de Leads</h1>
               </div>
-              <div className="flex items-center gap-4">
-                <Button onClick={() => setShowNewLeadDialog(true)} className="bg-[#5BA4B4] hover:bg-[#4A8A98] text-white">
-                  <UserPlus className="mr-2 h-4 w-4" />
-                  Nuevo Lead
-                </Button>
-                <Image
-                  src="/mate-living-logo.png"
-                  alt="Mate Living"
-                  width={200}
-                  height={24}
-                  className="h-11 w-auto"
-                />
-              </div>
-            </div>
-
-          {/* Filters */}
-          <div className="mb-6 flex flex-wrap gap-4 items-center">
-            <Input
-              placeholder="Buscar leads..."
+  <Image
+  src="/mate-living-logo.png"
+  alt="Mate Living"
+  width={200}
+  height={24}
+  className="h-11 w-auto"
+  />
+  </div>
+  
+  {/* Filters */}
+  <div className="mb-6 flex flex-wrap gap-4 items-center">
+  <Input
+  placeholder="Buscar leads..."
               value={leadFilterText}
               onChange={(e) => setLeadFilterText(e.target.value)}
               className="max-w-xs"
@@ -1611,11 +1605,15 @@ if (!error && newProj) {
                     {origen}
                   </SelectItem>
                 ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Leads Table */}
+  </SelectContent>
+  </Select>
+  <Button onClick={() => setShowNewLeadDialog(true)} className="bg-[#5BA4B4] hover:bg-[#4A8A98] text-white ml-auto">
+  <UserPlus className="mr-2 h-4 w-4" />
+  Nuevo Lead
+  </Button>
+  </div>
+  
+  {/* Leads Table */}
           {filteredLeads.length === 0 ? (
             <div className="text-center py-12 text-gray-500">
               {leadFilterText ||
