@@ -43,9 +43,9 @@ export function AppSidebar({ activeView, onNavigate }: AppSidebarProps) {
   const principalItems = [
     { id: "dashboard" as const, label: "Dashboard", icon: LayoutDashboard },
     { id: "proyectos" as const, label: "Proyectos", icon: FolderOpen },
-    { id: "clientes" as const, label: "Clientes", icon: Users },
+    { id: "clientes" as const, label: "Clientes", icon: Package },
     { id: "leads" as const, label: "Leads", icon: UserPlus },
-    { id: "productos" as const, label: "Productos", icon: Package },
+    { id: "productos" as const, label: "Productos", icon: Users },
   ]
 
   const herramientasItems = [
