@@ -27,6 +27,7 @@ import {
   FolderOpen,
   Package,
   LayoutDashboard,
+  Eye,
 } from "lucide-react"
 import Image from "next/image"
 import { createBrowserClient } from "@supabase/ssr"
