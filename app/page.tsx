@@ -1300,7 +1300,7 @@ if (!error && newProj) {
       )
     }
 
-    // Clients list view
+    // Clients list view (when no client is selected)
     return (
       <SidebarProvider>
         <AppSidebar activeView={activeView} onNavigate={(view) => { setActiveView(view); setSelectedProject(null); }} />
@@ -1311,7 +1311,119 @@ if (!error && newProj) {
               <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center gap-4">
                   <SidebarTrigger className="text-[#5BA4B4]" />
-                  <h1 className="text-3xl font-bold text-[#5BA4B4]">Gestión de Productos</h1>
+                  <h1 className="text-3xl font-bold text-[#5BA4B4]">Gestión de Clientes</h1>
+                </div>
+                <Image
+                  src="/mate-living-logo.png"
+                  alt="Mate Living"
+                  width={200}
+                  height={24}
+                  className="h-11 w-auto"
+                />
+              </div>
+
+              {/* Filters */}
+              <div className="mb-6 flex flex-wrap gap-4 items-center">
+                <Input
+                  placeholder="Buscar clientes..."
+                  value={clientFilterText}
+                  onChange={(e) => setClientFilterText(e.target.value)}
+                  className="max-w-xs"
+                />
+              </div>
+
+              {/* Clients Table */}
+              <Card>
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="bg-[#5BA4B4] text-white">
+                        <th className="px-4 py-3 text-left font-semibold">Empresa</th>
+                        <th className="px-4 py-3 text-left font-semibold">Tipo Cliente</th>
+                        <th className="px-4 py-3 text-left font-semibold">Contacto</th>
+                        <th className="px-4 py-3 text-left font-semibold">Estado</th>
+                        <th className="px-4 py-3 text-left font-semibold">Fecha</th>
+                        <th className="px-4 py-3 text-center font-semibold">Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredClients.map((client) => (
+                        <tr
+                          key={client.id}
+                          className="border-b hover:bg-gray-50 cursor-pointer"
+                          onClick={() => {
+                            setSelectedClient(client)
+                            loadClientProjects(client.id, client.nombre_empresa)
+                          }}
+                        >
+                          <td className="px-4 py-3">
+                            <div>
+                              <p className="font-semibold">{client.nombre_empresa}</p>
+                              <p className="text-sm text-gray-500">{client.email}</p>
+                            </div>
+                          </td>
+                          <td className="px-4 py-3">{client.tipo_cliente}</td>
+                          <td className="px-4 py-3">
+                            <div>
+                              <p className="font-medium">{client.contacto}</p>
+                              <p className="text-sm text-gray-500">{client.telefono}</p>
+                            </div>
+                          </td>
+                          <td className="px-4 py-3">
+                            <span className={`px-3 py-1 rounded-full text-sm font-medium ${CLIENT_ESTADO_CONFIG[client.estado]?.color || "bg-gray-100 text-gray-800"}`}>
+                              {client.estado}
+                            </span>
+                          </td>
+                          <td className="px-4 py-3 text-sm">
+                            {new Date(client.created_at).toLocaleDateString("es-CR", { day: "numeric", month: "short" })}
+                          </td>
+                          <td className="px-4 py-3">
+                            <div className="flex justify-center gap-2">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  setSelectedClient(client)
+                                  loadClientProjects(client.id, client.nombre_empresa)
+                                }}
+                                className="h-8 w-8 text-gray-500 hover:text-[#5BA4B4] hover:bg-[#5BA4B4]/10"
+                              >
+                                <Eye className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  {filteredClients.length === 0 && (
+                    <div className="text-center py-8 text-gray-500">
+                      No se encontraron clientes.
+                    </div>
+                  )}
+                </div>
+              </Card>
+            </div>
+          </div>
+        </SidebarInset>
+      </SidebarProvider>
+    )
+  }
+
+  // Products Management View
+  if (activeView === "productos" && !selectedProject) {
+  return (
+    <SidebarProvider>
+      <AppSidebar activeView={activeView} onNavigate={(view) => { setActiveView(view); setSelectedProject(null); }} />
+      <SidebarInset>
+        <div className="min-h-screen bg-gray-50">
+          <div className="w-full px-8 py-8">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-4">
+              <SidebarTrigger className="text-[#5BA4B4]" />
+              <h1 className="text-3xl font-bold text-[#5BA4B4]">Gestión de Productos</h1>
                   <Button
                     onClick={() => {
                       setEditingProductData({}) // Clear previous data
