@@ -93,7 +93,7 @@ const LEAD_STATUS_COLORS: { [key: string]: string } = {
   Contactado: "#F59E0B",
   Calificado: "#10B981",
   "En Seguimiento": "#8B5CF6",
-  Convertido: "#3D4F5F",
+  Convertido: "#3D5A6E",
   Perdido: "#EF4444",
 }
 
@@ -327,7 +327,7 @@ export default function Dashboard() {
       acc[p.estatus] = (acc[p.estatus] || 0) + 1
       return acc
     }, {} as { [key: string]: number })
-  ).map(([name, value]) => ({ name, value, color: STATUS_COLORS[name] || "#3D4F5F" }))
+  ).map(([name, value]) => ({ name, value, color: STATUS_COLORS[name] || "#3D5A6E" }))
 
   // Leads by status for pie chart
   const leadsByStatus = Object.entries(
@@ -335,7 +335,7 @@ export default function Dashboard() {
       acc[l.estado] = (acc[l.estado] || 0) + 1
       return acc
     }, {} as { [key: string]: number })
-  ).map(([name, value]) => ({ name, value, color: LEAD_STATUS_COLORS[name] || "#3D4F5F" }))
+  ).map(([name, value]) => ({ name, value, color: LEAD_STATUS_COLORS[name] || "#3D5A6E" }))
 
   // Revenue by month (last 6 months)
   const getMonthlyData = () => {
@@ -373,7 +373,7 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#3D4F5F]" />
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#3D5A6E]" />
       </div>
     )
   }
@@ -386,16 +386,16 @@ export default function Dashboard() {
       {/* Scorecard - 10 KPI Chips in 2 rows of 5 */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         {/* 1. Ventas Totales */}
-        <Card className="border-t-4 border-t-[#3D4F5F]">
+        <Card className="border-t-4 border-t-[#3D5A6E]">
           <CardContent className="pt-2 pb-4 px-4">
             <div className="flex items-start justify-between">
               <div className="flex-1 min-w-0">
-                <p className="text-xs text-[#3D4F5F] uppercase tracking-wide font-bold">Ventas Totales</p>
+                <p className="text-xs text-[#3D5A6E] uppercase tracking-wide font-bold">Ventas Totales</p>
                 <p className="text-2xl font-bold text-gray-900 mt-1 truncate">{formatCurrency(ventasTotales)}</p>
                 <p className="text-xs text-gray-400 mt-1">{ventasProjectCount} proyectos | {ventasClientCount} clientes</p>
               </div>
-              <div className="p-2 bg-[#3D4F5F]/10 rounded-full shrink-0">
-                <DollarSign className="h-4 w-4 text-[#3D4F5F]" />
+              <div className="p-2 bg-[#3D5A6E]/10 rounded-full shrink-0">
+                <DollarSign className="h-4 w-4 text-[#3D5A6E]" />
               </div>
             </div>
           </CardContent>
@@ -623,7 +623,7 @@ export default function Dashboard() {
                   <YAxis tick={{ fontSize: 12 }} tickFormatter={(v) => `₡${(v / 1000000).toFixed(1)}M`} />
                   <Tooltip formatter={(value: number) => `₡${value.toLocaleString("es-CR")}`} contentStyle={{ fontSize: 12 }} />
                   <Legend />
-                  <Bar dataKey="ingresos" name="Ingresos" fill="#3D4F5F" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="ingresos" name="Ingresos" fill="#3D5A6E" radius={[4, 4, 0, 0]} />
                   <Bar dataKey="utilidad" name="Utilidad" fill="#10B981" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
@@ -707,7 +707,7 @@ export default function Dashboard() {
                   <span className="font-medium">{formatCurrency(utilidadEsperada)}</span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-3">
-                  <div className="bg-[#3D4F5F] h-3 rounded-full" style={{ width: "100%" }} />
+                  <div className="bg-[#3D5A6E] h-3 rounded-full" style={{ width: "100%" }} />
                 </div>
               </div>
               <div>
