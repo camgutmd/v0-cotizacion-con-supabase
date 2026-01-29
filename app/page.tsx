@@ -168,7 +168,7 @@ type Client = {
 }
 
 const CLIENT_ESTADO_CONFIG: { [key: string]: { label: string; color: string } } = {
-  Convertido: { label: "Convertido", color: "bg-[#5BA4B4] text-white" },
+  Convertido: { label: "Convertido", color: "bg-[#3D4F5F] text-white" },
   Activo: { label: "Activo", color: "bg-green-500 text-white" },
 }
 
@@ -1115,8 +1115,8 @@ export default function QuotationApp() {
               {/* Header */}
               <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center gap-4">
-                  <SidebarTrigger className="text-[#5BA4B4]" />
-                  <h1 className="text-3xl font-bold text-[#5BA4B4]">Dashboard</h1>
+                  <SidebarTrigger className="text-[#3D4F5F]" />
+                  <h1 className="text-3xl font-bold text-[#3D4F5F]">Dashboard</h1>
                 </div>
                 <Image
                   src="/mate-living-logo.png"
@@ -1157,13 +1157,13 @@ export default function QuotationApp() {
                         setSelectedClient(null)
                         setClientProjects([])
                       }}
-                      className="text-[#5BA4B4] hover:text-[#4A8A98]"
+                      className="text-[#3D4F5F] hover:text-[#2D3F4F]"
                     >
                       <ArrowLeft className="mr-2 h-4 w-4" />
                       Volver a Clientes
                     </Button>
                     <div>
-                      <h1 className="text-3xl font-bold text-[#5BA4B4]">{selectedClient.nombre_empresa}</h1>
+                      <h1 className="text-3xl font-bold text-[#3D4F5F]">{selectedClient.nombre_empresa}</h1>
                       <p className="text-gray-500">
                         {selectedClient.tipo_cliente === "Otro" ? selectedClient.tipo_cliente_otro : selectedClient.tipo_cliente}
                       </p>
@@ -1188,7 +1188,7 @@ export default function QuotationApp() {
             {/* Client Info Card */}
             <Card className="mb-6">
               <CardHeader>
-                <CardTitle className="text-[#5BA4B4]">Información del Cliente</CardTitle>
+                <CardTitle className="text-[#3D4F5F]">Información del Cliente</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 gap-4">
@@ -1221,7 +1221,7 @@ export default function QuotationApp() {
             {/* Client Projects */}
             <Card>
               <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle className="text-[#5BA4B4]">Proyectos del Cliente</CardTitle>
+                <CardTitle className="text-[#3D4F5F]">Proyectos del Cliente</CardTitle>
                 <Button
                   onClick={async () => {
                     // Create new project for this client
@@ -1250,7 +1250,7 @@ if (!error && newProj) {
   await loadProjects()
   }
                   }}
-                  className="bg-[#5BA4B4] hover:bg-[#4A8A98] text-white"
+                  className="bg-[#3D4F5F] hover:bg-[#2D3F4F] text-white"
                 >
                   <Plus className="mr-2 h-4 w-4" />
                   Nueva Cotización
@@ -1284,7 +1284,7 @@ if (!error && newProj) {
                           >
                             {project.estatus}
                           </span>
-                          <span className="text-[#5BA4B4] font-bold">
+                          <span className="text-[#3D4F5F] font-bold">
                             ₡{(projectTotals[project.id] || 0).toLocaleString("es-CR")}
                           </span>
                         </div>
@@ -1311,8 +1311,8 @@ if (!error && newProj) {
               {/* Header */}
               <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center gap-4">
-                  <SidebarTrigger className="text-[#5BA4B4]" />
-                  <h1 className="text-3xl font-bold text-[#5BA4B4]">Gestión de Clientes</h1>
+                  <SidebarTrigger className="text-[#3D4F5F]" />
+                  <h1 className="text-3xl font-bold text-[#3D4F5F]">Gestión de Clientes</h1>
                 </div>
                 <Image
                   src="/mate-living-logo.png"
@@ -1338,7 +1338,7 @@ if (!error && newProj) {
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead>
-                      <tr className="bg-[#5BA4B4] text-white">
+                      <tr className="bg-[#3D4F5F] text-white">
                         <th className="px-4 py-3 text-left font-semibold">Empresa</th>
                         <th className="px-4 py-3 text-left font-semibold">Tipo Cliente</th>
                         <th className="px-4 py-3 text-left font-semibold">Contacto</th>
@@ -1388,7 +1388,7 @@ if (!error && newProj) {
                                   setSelectedClient(client)
                                   loadClientProjects(client.id, client.nombre_empresa)
                                 }}
-                                className="h-8 w-8 text-gray-500 hover:text-[#5BA4B4] hover:bg-[#5BA4B4]/10"
+                                className="h-8 w-8 text-gray-500 hover:text-[#3D4F5F] hover:bg-[#3D4F5F]/10"
                               >
                                 <Eye className="h-4 w-4" />
                               </Button>
@@ -1423,8 +1423,8 @@ if (!error && newProj) {
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-4">
-              <SidebarTrigger className="text-[#5BA4B4]" />
-              <h1 className="text-3xl font-bold text-[#5BA4B4]">Gestión de Productos</h1>
+              <SidebarTrigger className="text-[#3D4F5F]" />
+              <h1 className="text-3xl font-bold text-[#3D4F5F]">Gestión de Productos</h1>
                   <Button
                     onClick={() => {
                       setEditingProductData({}) // Clear previous data
@@ -1432,7 +1432,7 @@ if (!error && newProj) {
                       setIsAddingProduct(true) // Open the form to add a new product
                       setShowProductDialog(true) // Open the dialog
                     }}
-                    className="bg-[#5BA4B4] hover:bg-[#4A8A98] text-white"
+                    className="bg-[#3D4F5F] hover:bg-[#2D3F4F] text-white"
                   >
                     <Plus className="mr-2 h-4 w-4" />
                     Nuevo Producto
@@ -1461,7 +1461,7 @@ if (!error && newProj) {
                     placeholder="Buscar por cualquier campo..."
                     value={productSearchTerm}
                     onChange={(e) => setProductSearchTerm(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#5BA4B4] focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#3D4F5F] focus:border-transparent"
                   />
                 </div>
               </div>
@@ -1475,7 +1475,7 @@ if (!error && newProj) {
                     setCategoryFilter(e.target.value)
                     setSubcategoryFilter("all")
                   }}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#5BA4B4] focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#3D4F5F] focus:border-transparent"
                 >
                   <option value="all">Todas</option>
                   {Array.from(new Set(allProducts.map((p) => p.Categoria)))
@@ -1494,7 +1494,7 @@ if (!error && newProj) {
                 <select
                   value={subcategoryFilter}
                   onChange={(e) => setSubcategoryFilter(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#5BA4B4] focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#3D4F5F] focus:border-transparent"
                   disabled={categoryFilter === "all"}
                 >
                   <option value="all">Todas</option>
@@ -1593,7 +1593,7 @@ if (!error && newProj) {
                                 setIsEditingProduct(product.id)
                                 setShowProductDialog(true)
                               }}
-                              className="text-[#5BA4B4] hover:text-[#4A8A98] hover:bg-[#5BA4B4]/10"
+                              className="text-[#3D4F5F] hover:text-[#2D3F4F] hover:bg-[#3D4F5F]/10"
                             >
                               <Pencil className="h-4 w-4" />
                             </Button>
@@ -1661,8 +1661,8 @@ if (!error && newProj) {
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-4">
-                <SidebarTrigger className="text-[#5BA4B4]" />
-                <h1 className="text-3xl font-bold text-[#5BA4B4]">Gestión de Leads</h1>
+                <SidebarTrigger className="text-[#3D4F5F]" />
+                <h1 className="text-3xl font-bold text-[#3D4F5F]">Gestión de Leads</h1>
               </div>
   <Image
   src="/mate-living-logo.png"
@@ -1720,7 +1720,7 @@ if (!error && newProj) {
                 ))}
   </SelectContent>
   </Select>
-  <Button onClick={() => setShowNewLeadDialog(true)} className="bg-[#5BA4B4] hover:bg-[#4A8A98] text-white ml-auto">
+  <Button onClick={() => setShowNewLeadDialog(true)} className="bg-[#3D4F5F] hover:bg-[#2D3F4F] text-white ml-auto">
   <UserPlus className="mr-2 h-4 w-4" />
   Nuevo Lead
   </Button>
@@ -1739,7 +1739,7 @@ if (!error && newProj) {
           ) : (
             <div className="space-y-2">
               {/* Table Header */}
-              <div className="grid grid-cols-12 gap-4 px-4 py-3 bg-[#5BA4B4] text-white font-semibold rounded-t-lg text-sm">
+              <div className="grid grid-cols-12 gap-4 px-4 py-3 bg-[#3D4F5F] text-white font-semibold rounded-t-lg text-sm">
                 <div className="col-span-2">Empresa</div>
                 <div className="col-span-2">Tipo Cliente</div>
                 <div className="col-span-2">Contacto</div>
@@ -1798,7 +1798,7 @@ if (!error && newProj) {
                       }}
                       title="Editar"
                     >
-                      <Pencil className="h-4 w-4 text-[#5BA4B4]" />
+                      <Pencil className="h-4 w-4 text-[#3D4F5F]" />
                     </Button>
                     <Button
                       variant="ghost"
@@ -1829,7 +1829,7 @@ if (!error && newProj) {
             </DialogHeader>
             <div className="space-y-4">
               <div>
-                <Label className="text-[#5BA4B4]">
+                <Label className="text-[#3D4F5F]">
                   Nombre / Empresa <span className="text-red-500">*</span>
                 </Label>
                 <Input
@@ -1839,7 +1839,7 @@ if (!error && newProj) {
                 />
               </div>
               <div>
-                <Label className="text-[#5BA4B4]">Tipo de Cliente</Label>
+                <Label className="text-[#3D4F5F]">Tipo de Cliente</Label>
                 <Select
                   value={newLead.tipo_cliente}
                   onValueChange={(value) => setNewLead({ ...newLead, tipo_cliente: value })}
@@ -1858,7 +1858,7 @@ if (!error && newProj) {
               </div>
               {newLead.tipo_cliente === "Otro" && (
                 <div>
-                  <Label className="text-[#5BA4B4]">
+                  <Label className="text-[#3D4F5F]">
                     Especificar Tipo <span className="text-red-500">*</span>
                   </Label>
                   <Input
@@ -1870,7 +1870,7 @@ if (!error && newProj) {
                 </div>
               )}
               <div>
-                <Label className="text-[#5BA4B4]">Contacto</Label>
+                <Label className="text-[#3D4F5F]">Contacto</Label>
                 <Input
                   value={newLead.contacto}
                   onChange={(e) => setNewLead({ ...newLead, contacto: e.target.value })}
@@ -1879,7 +1879,7 @@ if (!error && newProj) {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label className="text-[#5BA4B4]">Teléfono</Label>
+                  <Label className="text-[#3D4F5F]">Teléfono</Label>
                   <Input
                     value={newLead.telefono}
                     onChange={(e) => setNewLead({ ...newLead, telefono: e.target.value })}
@@ -1887,7 +1887,7 @@ if (!error && newProj) {
                   />
                 </div>
                 <div>
-                  <Label className="text-[#5BA4B4]">Email</Label>
+                  <Label className="text-[#3D4F5F]">Email</Label>
                   <Input
                     value={newLead.email}
                     onChange={(e) => setNewLead({ ...newLead, email: e.target.value })}
@@ -1897,7 +1897,7 @@ if (!error && newProj) {
               </div>
               <div className="grid grid-cols-3 gap-4">
                 <div>
-                  <Label className="text-[#5BA4B4]">Origen</Label>
+                  <Label className="text-[#3D4F5F]">Origen</Label>
                   <Select value={newLead.origen} onValueChange={(value) => setNewLead({ ...newLead, origen: value })}>
                     <SelectTrigger>
                       <SelectValue />
@@ -1912,7 +1912,7 @@ if (!error && newProj) {
                   </Select>
                 </div>
                 <div>
-                  <Label className="text-[#5BA4B4]">Estado</Label>
+                  <Label className="text-[#3D4F5F]">Estado</Label>
                   <Select value={newLead.estado} onValueChange={(value) => setNewLead({ ...newLead, estado: value })}>
                     <SelectTrigger>
                       <SelectValue />
@@ -1929,7 +1929,7 @@ if (!error && newProj) {
                   </Select>
                 </div>
                 <div>
-                  <Label className="text-[#5BA4B4]">Prioridad</Label>
+                  <Label className="text-[#3D4F5F]">Prioridad</Label>
                   <Select
                     value={newLead.prioridad}
                     onValueChange={(value) => setNewLead({ ...newLead, prioridad: value })}
@@ -1948,7 +1948,7 @@ if (!error && newProj) {
                 </div>
               </div>
               <div>
-                <Label className="text-[#5BA4B4]">Notas</Label>
+                <Label className="text-[#3D4F5F]">Notas</Label>
                 <Textarea
                   value={newLead.notas}
                   onChange={(e) => setNewLead({ ...newLead, notas: e.target.value })}
@@ -1958,7 +1958,7 @@ if (!error && newProj) {
               </div>
               <Button
                 onClick={handleCreateLead}
-                className="w-full bg-[#5BA4B4] hover:bg-[#4A8A98] text-white"
+                className="w-full bg-[#3D4F5F] hover:bg-[#2D3F4F] text-white"
                 disabled={!newLead.nombre_empresa || (newLead.tipo_cliente === "Otro" && !newLead.tipo_cliente_otro)}
               >
                 Crear Lead
@@ -1976,7 +1976,7 @@ if (!error && newProj) {
             {editingLead && (
               <div className="space-y-4">
                 <div>
-                  <Label className="text-[#5BA4B4]">
+                  <Label className="text-[#3D4F5F]">
                     Nombre / Empresa <span className="text-red-500">*</span>
                   </Label>
                   <Input
@@ -1985,7 +1985,7 @@ if (!error && newProj) {
                   />
                 </div>
                 <div>
-                  <Label className="text-[#5BA4B4]">Tipo de Cliente</Label>
+                  <Label className="text-[#3D4F5F]">Tipo de Cliente</Label>
                   <Select
                     value={editingLead.tipo_cliente}
                     onValueChange={(value) => setEditingLead({ ...editingLead, tipo_cliente: value })}
@@ -2004,7 +2004,7 @@ if (!error && newProj) {
                 </div>
                 {editingLead.tipo_cliente === "Otro" && (
                   <div>
-                    <Label className="text-[#5BA4B4]">
+                    <Label className="text-[#3D4F5F]">
                       Especificar Tipo <span className="text-red-500">*</span>
                     </Label>
                     <Input
@@ -2015,7 +2015,7 @@ if (!error && newProj) {
                   </div>
                 )}
                 <div>
-                  <Label className="text-[#5BA4B4]">Contacto</Label>
+                  <Label className="text-[#3D4F5F]">Contacto</Label>
                   <Input
                     value={editingLead.contacto || ""}
                     onChange={(e) => setEditingLead({ ...editingLead, contacto: e.target.value })}
@@ -2023,14 +2023,14 @@ if (!error && newProj) {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label className="text-[#5BA4B4]">Teléfono</Label>
+                    <Label className="text-[#3D4F5F]">Teléfono</Label>
                     <Input
                       value={editingLead.telefono || ""}
                       onChange={(e) => setEditingLead({ ...editingLead, telefono: e.target.value })}
                     />
                   </div>
                   <div>
-                    <Label className="text-[#5BA4B4]">Email</Label>
+                    <Label className="text-[#3D4F5F]">Email</Label>
                     <Input
                       value={editingLead.email || ""}
                       onChange={(e) => setEditingLead({ ...editingLead, email: e.target.value })}
@@ -2039,7 +2039,7 @@ if (!error && newProj) {
                 </div>
                 <div className="grid grid-cols-3 gap-4">
                   <div>
-                    <Label className="text-[#5BA4B4]">Origen</Label>
+                    <Label className="text-[#3D4F5F]">Origen</Label>
                     <Select
                       value={editingLead.origen}
                       onValueChange={(value) => setEditingLead({ ...editingLead, origen: value })}
@@ -2057,7 +2057,7 @@ if (!error && newProj) {
                     </Select>
                   </div>
                   <div>
-                    <Label className="text-[#5BA4B4]">Estado</Label>
+                    <Label className="text-[#3D4F5F]">Estado</Label>
                     <Select
                       value={editingLead.estado}
                       onValueChange={(value) => setEditingLead({ ...editingLead, estado: value })}
@@ -2075,7 +2075,7 @@ if (!error && newProj) {
                     </Select>
                   </div>
                   <div>
-                    <Label className="text-[#5BA4B4]">Prioridad</Label>
+                    <Label className="text-[#3D4F5F]">Prioridad</Label>
                     <Select
                       value={editingLead.prioridad}
                       onValueChange={(value) => setEditingLead({ ...editingLead, prioridad: value })}
@@ -2094,7 +2094,7 @@ if (!error && newProj) {
                   </div>
                 </div>
                 <div>
-                  <Label className="text-[#5BA4B4]">Notas</Label>
+                  <Label className="text-[#3D4F5F]">Notas</Label>
                   <Textarea
                     value={editingLead.notas || ""}
                     onChange={(e) => setEditingLead({ ...editingLead, notas: e.target.value })}
@@ -2103,7 +2103,7 @@ if (!error && newProj) {
                 </div>
                 <Button
                   onClick={handleUpdateLead}
-                  className="w-full bg-[#5BA4B4] hover:bg-[#4A8A98] text-white"
+                  className="w-full bg-[#3D4F5F] hover:bg-[#2D3F4F] text-white"
                   disabled={
                     !editingLead.nombre_empresa ||
                     (editingLead.tipo_cliente === "Otro" && !editingLead.tipo_cliente_otro)
@@ -2184,8 +2184,8 @@ if (!error && newProj) {
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-4">
-                <SidebarTrigger className="text-[#5BA4B4]" />
-                <h1 className="text-3xl font-bold text-[#5BA4B4]">Proyectos</h1>
+                <SidebarTrigger className="text-[#3D4F5F]" />
+                <h1 className="text-3xl font-bold text-[#3D4F5F]">Proyectos</h1>
               </div>
               <Image
                 src="/mate-living-logo.png"
@@ -2222,19 +2222,19 @@ if (!error && newProj) {
                 variant="outline"
                 size="icon"
                 onClick={() => setSortDirection(sortDirection === "asc" ? "desc" : "asc")}
-                className="border-[#5BA4B4] text-[#5BA4B4] hover:bg-[#5BA4B4] hover:text-white"
+                className="border-[#3D4F5F] text-[#3D4F5F] hover:bg-[#3D4F5F] hover:text-white"
               >
                 {sortDirection === "asc" ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />}
               </Button>
             </div>
             {/* </CHANGE> Added CSV download button */}
-            <Button onClick={handleDownloadCSV} className="bg-[#5BA4B4] hover:bg-[#4A8A98] text-white">
+            <Button onClick={handleDownloadCSV} className="bg-[#3D4F5F] hover:bg-[#2D3F4F] text-white">
               <Download className="mr-2 h-4 w-4" />
               Exportar CSV
             </Button>
             <Button
               onClick={() => setShowNewProjectDialog(true)}
-              className="bg-[#5BA4B4] hover:bg-[#4A8A98] text-white ml-auto"
+              className="bg-[#3D4F5F] hover:bg-[#2D3F4F] text-white ml-auto"
             >
               <Plus className="mr-2 h-4 w-4" />
               Nuevo Proyecto
@@ -2249,7 +2249,7 @@ if (!error && newProj) {
         ) : (
           <div className="space-y-2">
             {/* Table Header */}
-            <div className="grid grid-cols-13 gap-4 px-4 py-3 bg-[#5BA4B4] text-white font-semibold rounded-t-lg text-sm">
+            <div className="grid grid-cols-13 gap-4 px-4 py-3 bg-[#3D4F5F] text-white font-semibold rounded-t-lg text-sm">
               <div className="col-span-2">Nombre</div>
               <div className="col-span-2">Cliente</div>
               <div className="col-span-2">Descripción</div>
@@ -2270,14 +2270,14 @@ if (!error && newProj) {
             {sortedAndFilteredProjects.map((project) => (
               <div
                 key={project.id}
-                className="grid grid-cols-13 gap-4 px-4 py-3 border border-[#5BA4B4]/20 hover:bg-[#5BA4B4]/5 transition-colors cursor-pointer rounded-lg items-center"
+                className="grid grid-cols-13 gap-4 px-4 py-3 border border-[#3D4F5F]/20 hover:bg-[#3D4F5F]/5 transition-colors cursor-pointer rounded-lg items-center"
                 onClick={() => setSelectedProject(project)}
                 data-project-detail // Added for selecting project detail view
               >
                 <div className="col-span-2 font-semibold text-black truncate">{project.nombre}</div>
                 <div className="col-span-2 text-sm text-gray-700 truncate">{project.cliente || "-"}</div>
                 <div className="col-span-2 text-sm text-gray-600 truncate">{project.descripcion || "-"}</div>
-                <div className="col-span-2 text-[#5BA4B4] font-semibold">
+                <div className="col-span-2 text-[#3D4F5F] font-semibold">
                   {formatCurrency(projectTotals[project.id] || 0)}
                 </div>
                 {/* </CHANGE> */}
@@ -2304,7 +2304,7 @@ if (!error && newProj) {
                       e.stopPropagation()
                       handleEditProject(project)
                     }}
-                    className="h-7 w-7 text-[#5BA4B4] hover:text-[#4A8A98] hover:bg-[#5BA4B4]/10"
+                    className="h-7 w-7 text-[#3D4F5F] hover:text-[#2D3F4F] hover:bg-[#3D4F5F]/10"
                     title="Editar"
                   >
                     <Pencil className="h-3.5 w-3.5" />
@@ -2317,7 +2317,7 @@ if (!error && newProj) {
                       e.stopPropagation()
                       handleDuplicateProject(project)
                     }}
-                    className="h-7 w-7 text-[#5BA4B4] hover:text-[#4A8A98] hover:bg-[#5BA4B4]/10"
+                    className="h-7 w-7 text-[#3D4F5F] hover:text-[#2D3F4F] hover:bg-[#3D4F5F]/10"
                     title="Duplicar"
                   >
                     <Copy className="h-3.5 w-3.5" />
@@ -2330,7 +2330,7 @@ if (!error && newProj) {
                       setSelectedProject(project)
                       setShowFinalSummary(true)
                     }}
-                    className="h-7 w-7 text-[#5BA4B4] hover:text-[#4A8A98] hover:bg-[#5BA4B4]/10"
+                    className="h-7 w-7 text-[#3D4F5F] hover:text-[#2D3F4F] hover:bg-[#3D4F5F]/10"
                     title="Ver Resumen"
                   >
                     <FileText className="h-4 w-4" />
@@ -2362,7 +2362,7 @@ if (!error && newProj) {
       <Dialog open={isNewProductOpen} onOpenChange={setIsNewProductOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className="text-[#5BA4B4]">Agregar Nuevo Producto</DialogTitle>
+            <DialogTitle className="text-[#3D4F5F]">Agregar Nuevo Producto</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
@@ -2444,11 +2444,11 @@ if (!error && newProj) {
       <Dialog open={isEditProjectOpen} onOpenChange={setIsEditProjectOpen}>
         <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-[#5BA4B4]">Editar Proyecto</DialogTitle>
+            <DialogTitle className="text-[#3D4F5F]">Editar Proyecto</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="edit-projectName" className="text-[#5BA4B4]">
+              <Label htmlFor="edit-projectName" className="text-[#3D4F5F]">
                 Nombre del Proyecto <span className="text-red-500">*</span>
               </Label>
               <Input
@@ -2459,7 +2459,7 @@ if (!error && newProj) {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="edit-clientName" className="text-[#5BA4B4]">
+              <Label htmlFor="edit-clientName" className="text-[#3D4F5F]">
                 Cliente <span className="text-red-500">*</span>
               </Label>
               <Select
@@ -2472,7 +2472,7 @@ if (!error && newProj) {
                 <SelectContent>
                   {clients.length > 0 && (
                     <>
-                      <SelectItem value="__clients_header__" disabled className="font-bold text-[#5BA4B4]">
+                      <SelectItem value="__clients_header__" disabled className="font-bold text-[#3D4F5F]">
                         -- Clientes --
                       </SelectItem>
                       {clients.map((client) => (
@@ -2484,7 +2484,7 @@ if (!error && newProj) {
                   )}
                   {leads.length > 0 && (
                     <>
-                      <SelectItem value="__leads_header__" disabled className="font-bold text-[#5BA4B4]">
+                      <SelectItem value="__leads_header__" disabled className="font-bold text-[#3D4F5F]">
                         -- Leads --
                       </SelectItem>
                       {leads.filter(l => l.estado !== "Convertido").map((lead) => (
@@ -2498,7 +2498,7 @@ if (!error && newProj) {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="edit-description" className="text-[#5BA4B4]">
+              <Label htmlFor="edit-description" className="text-[#3D4F5F]">
                 Descripción
               </Label>
               <Textarea
@@ -2511,7 +2511,7 @@ if (!error && newProj) {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="edit-margen" className="text-[#5BA4B4]">
+                <Label htmlFor="edit-margen" className="text-[#3D4F5F]">
                   Margen <span className="text-red-500">*</span>
                 </Label>
                 <div className="relative">
@@ -2531,7 +2531,7 @@ if (!error && newProj) {
                 </div>
               </div>
               <div className="space-y-2">
-                <Label className="text-[#5BA4B4]">Utilidad Esperada</Label>
+                <Label className="text-[#3D4F5F]">Utilidad Esperada</Label>
                 <div className="p-2 bg-gray-100 rounded-md text-right font-medium">
                   ₡{((projectTotals[editingProject?.id] || 0) * ((editingProject?.margen || 0) / 100)).toLocaleString("es-CR", { maximumFractionDigits: 0 })}
                 </div>
@@ -2540,7 +2540,7 @@ if (!error && newProj) {
             {["Pagado", "Finalizado"].includes(editingProject?.estatus || "") && (
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="edit-utilidad-real" className="text-[#5BA4B4]">
+                  <Label htmlFor="edit-utilidad-real" className="text-[#3D4F5F]">
                     Utilidad Real
                   </Label>
                   <div className="relative">
@@ -2558,7 +2558,7 @@ if (!error && newProj) {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-[#5BA4B4]">Margen Real</Label>
+                  <Label className="text-[#3D4F5F]">Margen Real</Label>
                   <div className="p-2 bg-gray-100 rounded-md text-right font-medium">
                     {(((editingProject?.utilidad_real || 0) / (projectTotals[editingProject?.id] || 1)) * 100).toFixed(2)}%
                   </div>
@@ -2566,7 +2566,7 @@ if (!error && newProj) {
               </div>
             )}
             <div className="space-y-2">
-              <Label htmlFor="edit-estatus" className="text-[#5BA4B4]">
+              <Label htmlFor="edit-estatus" className="text-[#3D4F5F]">
                 Estatus <span className="text-red-500">*</span>
               </Label>
               <Select
@@ -2596,7 +2596,7 @@ if (!error && newProj) {
             {["Aceptado", "Produccion", "Entregado", "Pagado", "Finalizado"].includes(editingProject?.estatus || "") && (
               <>
                 <div className="space-y-2">
-                  <Label htmlFor="edit-adelanto" className="text-[#5BA4B4]">
+                  <Label htmlFor="edit-adelanto" className="text-[#3D4F5F]">
                     Adelanto <span className="text-red-500">*</span>
                   </Label>
                   <Select
@@ -2631,7 +2631,7 @@ if (!error && newProj) {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="edit-porcentaje-adelanto" className="text-[#5BA4B4]">
+                  <Label htmlFor="edit-porcentaje-adelanto" className="text-[#3D4F5F]">
                     % Adelanto
                   </Label>
                   <div className="relative">
@@ -2662,13 +2662,13 @@ if (!error && newProj) {
                 </div>
                 <div className="grid grid-cols-3 gap-4">
                   <div className="space-y-2">
-                    <Label className="text-[#5BA4B4]">Monto Adelanto</Label>
+                    <Label className="text-[#3D4F5F]">Monto Adelanto</Label>
                     <div className="p-2 bg-gray-100 rounded-md text-right font-medium">
                       ₡{(editingProject?.monto_adelanto || 0).toLocaleString("es-CR")}
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-[#5BA4B4]">
+                    <Label className="text-[#3D4F5F]">
                       {["Pagado", "Finalizado"].includes(editingProject?.estatus || "") ? "Saldo Pagado" : "Saldo Pendiente"}
                     </Label>
                     <div className="p-2 bg-gray-100 rounded-md text-right font-medium">
@@ -2676,14 +2676,14 @@ if (!error && newProj) {
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-[#5BA4B4] font-bold">Total</Label>
-                    <div className="p-2 bg-[#5BA4B4] text-white rounded-md text-right font-bold">
+                    <Label className="text-[#3D4F5F] font-bold">Total</Label>
+                    <div className="p-2 bg-[#3D4F5F] text-white rounded-md text-right font-bold">
                       ₡{(projectTotals[editingProject?.id] || 0).toLocaleString("es-CR")}
                     </div>
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="edit-fecha-entrega" className="text-[#5BA4B4]">
+                  <Label htmlFor="edit-fecha-entrega" className="text-[#3D4F5F]">
                     Fecha de Entrega <span className="text-red-500">*</span>
                   </Label>
                   <Input
@@ -2695,7 +2695,7 @@ if (!error && newProj) {
                 </div>
                 {["Entregado", "Pagado", "Finalizado"].includes(editingProject?.estatus || "") && (
                   <div className="space-y-2">
-                    <Label htmlFor="edit-fecha-real" className="text-[#5BA4B4]">
+                    <Label htmlFor="edit-fecha-real" className="text-[#3D4F5F]">
                       Fecha Real de Entrega <span className="text-red-500">*</span>
                     </Label>
                     <Input
@@ -2711,7 +2711,7 @@ if (!error && newProj) {
             {editingProject?.estatus === "Rechazado" && (
               <>
                 <div className="space-y-2">
-                  <Label htmlFor="edit-razon-perdida" className="text-[#5BA4B4]">
+                  <Label htmlFor="edit-razon-perdida" className="text-[#3D4F5F]">
                     Razón de Pérdida <span className="text-red-500">*</span>
                   </Label>
                   <Select
@@ -2731,7 +2731,7 @@ if (!error && newProj) {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="edit-competidor" className="text-[#5BA4B4]">
+                  <Label htmlFor="edit-competidor" className="text-[#3D4F5F]">
                     Competidor <span className="text-red-500">*</span>
                   </Label>
                   <Input
@@ -2743,7 +2743,7 @@ if (!error && newProj) {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="edit-detalle-perdida" className="text-[#5BA4B4]">
+                  <Label htmlFor="edit-detalle-perdida" className="text-[#3D4F5F]">
                     Detalle de Pérdida <span className="text-red-500">*</span>
                   </Label>
                   <Textarea
@@ -2760,7 +2760,7 @@ if (!error && newProj) {
             {/* </CHANGE> */}
             <Button
               onClick={handleUpdateProject}
-              className="w-full bg-[#5BA4B4] hover:bg-[#4A8A98]"
+              className="w-full bg-[#3D4F5F] hover:bg-[#2D3F4F]"
               disabled={
                 !editingProject?.nombre?.trim() ||
                 !editingProject?.cliente?.trim() ||
@@ -2783,11 +2783,11 @@ if (!error && newProj) {
       <Dialog open={showNewProjectDialog} onOpenChange={setShowNewProjectDialog}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-[#5BA4B4]">Crear Nuevo Proyecto</DialogTitle>
+            <DialogTitle className="text-[#3D4F5F]">Crear Nuevo Proyecto</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="projectName" className="text-[#5BA4B4]">
+              <Label htmlFor="projectName" className="text-[#3D4F5F]">
                 Nombre del Proyecto <span className="text-red-500">*</span>
               </Label>
               <Input
@@ -2798,7 +2798,7 @@ if (!error && newProj) {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="clientName" className="text-[#5BA4B4]">
+              <Label htmlFor="clientName" className="text-[#3D4F5F]">
                 Cliente <span className="text-red-500">*</span>
               </Label>
               <Input
@@ -2809,7 +2809,7 @@ if (!error && newProj) {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="description" className="text-[#5BA4B4]">
+              <Label htmlFor="description" className="text-[#3D4F5F]">
                 Descripción
               </Label>
               <Textarea
@@ -2821,7 +2821,7 @@ if (!error && newProj) {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="margen" className="text-[#5BA4B4]">
+              <Label htmlFor="margen" className="text-[#3D4F5F]">
                 Margen <span className="text-red-500">*</span>
               </Label>
               <div className="relative">
@@ -2839,7 +2839,7 @@ if (!error && newProj) {
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="estatus" className="text-[#5BA4B4]">
+              <Label htmlFor="estatus" className="text-[#3D4F5F]">
                 Estatus <span className="text-red-500">*</span>
               </Label>
               <Select
@@ -2869,7 +2869,7 @@ if (!error && newProj) {
             {newProject.estatus === "Rechazado" && (
               <>
                 <div className="space-y-2">
-                  <Label htmlFor="razon-perdida" className="text-[#5BA4B4]">
+                  <Label htmlFor="razon-perdida" className="text-[#3D4F5F]">
                     Razón de Pérdida <span className="text-red-500">*</span>
                   </Label>
                   <Select
@@ -2889,7 +2889,7 @@ if (!error && newProj) {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="competidor" className="text-[#5BA4B4]">
+                  <Label htmlFor="competidor" className="text-[#3D4F5F]">
                     Competidor <span className="text-red-500">*</span>
                   </Label>
                   <Input
@@ -2901,7 +2901,7 @@ if (!error && newProj) {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="detalle-perdida" className="text-[#5BA4B4]">
+                  <Label htmlFor="detalle-perdida" className="text-[#3D4F5F]">
                     Detalle de Pérdida <span className="text-red-500">*</span>
                   </Label>
                   <Textarea
@@ -2917,7 +2917,7 @@ if (!error && newProj) {
             )}
             <Button
               onClick={handleCreateProject}
-              className="w-full bg-[#5BA4B4] hover:bg-[#4A8A98]"
+              className="w-full bg-[#3D4F5F] hover:bg-[#2D3F4F]"
               disabled={
                 !newProject.nombre.trim() ||
                 !newProject.cliente.trim() ||
@@ -3002,7 +3002,7 @@ function ProductDialog({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-[#5BA4B4]">{isEditing ? "Editar Producto" : "Nuevo Producto"}</DialogTitle>
+          <DialogTitle className="text-[#3D4F5F]">{isEditing ? "Editar Producto" : "Nuevo Producto"}</DialogTitle>
         </DialogHeader>
         <div className="space-y-4 mt-4">
           <div>
@@ -3067,7 +3067,7 @@ function ProductDialog({
             </Button>
             <Button
               onClick={onSave}
-              className="flex-1 bg-[#5BA4B4] hover:bg-[#4A8A98] text-white"
+              className="flex-1 bg-[#3D4F5F] hover:bg-[#2D3F4F] text-white"
               disabled={
                 !productData.Categoria ||
                 !productData.Subcategoria ||
@@ -3745,7 +3745,7 @@ function ProjectDetailView({
             </Button>
             <div>
               <p className="text-sm text-gray-500">{project.nombre}</p>
-              <h1 className="text-3xl font-bold text-[#5BA4B4]">{element.nombre}</h1>
+              <h1 className="text-3xl font-bold text-[#3D4F5F]">{element.nombre}</h1>
               <p className="text-gray-600">{element.tipo}</p>
             </div>
           </div>
@@ -3753,7 +3753,7 @@ function ProjectDetailView({
           {/* Agregar Productos Card */}
           <Card className="mb-6">
             <CardHeader className="pb-2">
-              <CardTitle className="text-[#5BA4B4] text-lg">Agregar Productos</CardTitle>
+              <CardTitle className="text-[#3D4F5F] text-lg">Agregar Productos</CardTitle>
               <p className="text-sm text-gray-500">Selecciona los productos para este elemento</p>
             </CardHeader>
             <CardContent>
@@ -3833,7 +3833,7 @@ function ProjectDetailView({
               </div>
               <Button
                 onClick={handleAddItem}
-                className="w-full mt-4 bg-[#5BA4B4] hover:bg-[#4A8A98] text-white"
+                className="w-full mt-4 bg-[#3D4F5F] hover:bg-[#2D3F4F] text-white"
                 disabled={!selectedItem}
               >
                 <Plus className="h-4 w-4 mr-2" />
@@ -3845,7 +3845,7 @@ function ProjectDetailView({
           {/* Items del Elemento Card */}
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-[#5BA4B4] text-lg">Items del Elemento</CardTitle>
+              <CardTitle className="text-[#3D4F5F] text-lg">Items del Elemento</CardTitle>
             </CardHeader>
             <CardContent>
               {quotationItems.length === 0 ? (
@@ -3902,7 +3902,7 @@ function ProjectDetailView({
                         </div>
                         <div className="text-center">
                           <p className="text-xs text-gray-500">Subtotal</p>
-                          <p className="font-bold text-[#5BA4B4]">
+                          <p className="font-bold text-[#3D4F5F]">
                             {formatCurrency((item.products?.Costo || 0) * item.cantidad)}
                           </p>
                         </div>
@@ -3947,14 +3947,14 @@ function ProjectDetailView({
             </Button>
             <div>
               <p className="text-sm text-gray-500">Resumen de Cotización</p>
-              <h1 className="text-3xl font-bold text-[#5BA4B4]">{project.nombre}</h1>
+              <h1 className="text-3xl font-bold text-[#3D4F5F]">{project.nombre}</h1>
             </div>
           </div>
 
           {/* Client Info */}
           <Card className="mb-6">
             <CardHeader className="pb-2">
-              <CardTitle className="text-[#5BA4B4] text-lg">Información del Cliente</CardTitle>
+              <CardTitle className="text-[#3D4F5F] text-lg">Información del Cliente</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -3981,7 +3981,7 @@ function ProjectDetailView({
           {/* Elements Summary */}
           <Card className="mb-6">
             <CardHeader className="pb-2">
-              <CardTitle className="text-[#5BA4B4] text-lg">Elementos de la Cotización</CardTitle>
+              <CardTitle className="text-[#3D4F5F] text-lg">Elementos de la Cotización</CardTitle>
             </CardHeader>
             <CardContent>
               {elements.length === 0 ? (
@@ -3994,7 +3994,7 @@ function ProjectDetailView({
                         <h3 className="font-semibold">{el.nombre}</h3>
                         <p className="text-sm text-gray-500">{el.tipo}</p>
                       </div>
-                      <p className="font-bold text-[#5BA4B4] text-lg">
+                      <p className="font-bold text-[#3D4F5F] text-lg">
                         {formatCurrency(elementTotals[el.id] || 0)}
                       </p>
                     </div>
@@ -4007,7 +4007,7 @@ function ProjectDetailView({
           {/* Totals */}
           <Card className="mb-6">
             <CardHeader className="pb-2">
-              <CardTitle className="text-[#5BA4B4] text-lg">Resumen de Totales</CardTitle>
+              <CardTitle className="text-[#3D4F5F] text-lg">Resumen de Totales</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
@@ -4021,7 +4021,7 @@ function ProjectDetailView({
                 </div>
                 <div className="flex justify-between items-center py-2">
                   <span className="text-lg font-bold">Total</span>
-                  <span className="text-2xl font-bold text-[#5BA4B4]">{formatCurrency(total)}</span>
+                  <span className="text-2xl font-bold text-[#3D4F5F]">{formatCurrency(total)}</span>
                 </div>
               </div>
             </CardContent>
@@ -4038,7 +4038,7 @@ function ProjectDetailView({
             </Button>
             <Button
               onClick={handleExportPDF}
-              className="bg-[#5BA4B4] hover:bg-[#4A8A98] text-white"
+              className="bg-[#3D4F5F] hover:bg-[#2D3F4F] text-white"
             >
               <Download className="mr-2 h-4 w-4" />
               Exportar PDF
@@ -4068,21 +4068,21 @@ function ProjectDetailView({
       <div className="w-full px-8 py-8">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
-          <button onClick={onBack} className="hover:text-[#5BA4B4]">
+          <button onClick={onBack} className="hover:text-[#3D4F5F]">
             Proyectos
           </button>
           <span>{">"}</span>
-          <span className="text-[#5BA4B4]">{project.nombre}</span>
+          <span className="text-[#3D4F5F]">{project.nombre}</span>
         </div>
 
         {/* Header */}
         <div className="flex justify-between items-start mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-[#5BA4B4]">{project.nombre}</h1>
+            <h1 className="text-3xl font-bold text-[#3D4F5F]">{project.nombre}</h1>
             <p className="text-gray-600">Gestiona los elementos de este proyecto</p>
           </div>
           <div className="flex gap-3">
-            <Button onClick={() => setIsNewElementOpen(true)} className="bg-[#5BA4B4] hover:bg-[#4A8A98] text-white">
+            <Button onClick={() => setIsNewElementOpen(true)} className="bg-[#3D4F5F] hover:bg-[#2D3F4F] text-white">
               <Plus className="mr-2 h-4 w-4" />
               Nuevo Elemento
             </Button>
@@ -4122,7 +4122,7 @@ function ProjectDetailView({
                         onClick={() => handleOpenEditElement(element)}
                         className="h-7 w-7"
                       >
-                        <Pencil className="h-4 w-4 text-[#5BA4B4]" />
+                        <Pencil className="h-4 w-4 text-[#3D4F5F]" />
                       </Button>
                       <Button
                         variant="ghost"
@@ -4141,7 +4141,7 @@ function ProjectDetailView({
                       className="w-full h-40 object-cover rounded-lg mb-3"
                     />
                   )}
-                  <p className="text-[#5BA4B4] font-semibold">
+                  <p className="text-[#3D4F5F] font-semibold">
                     Total Venta: {formatCurrency(elementTotals[element.id] || 0)}
                   </p>
                   <p className="text-sm text-gray-500 mt-1">Haz clic para agregar productos</p>
@@ -4156,7 +4156,7 @@ function ProjectDetailView({
       <Dialog open={isNewElementOpen} onOpenChange={setIsNewElementOpen}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-[#5BA4B4]">Nuevo Elemento</DialogTitle>
+            <DialogTitle className="text-[#3D4F5F]">Nuevo Elemento</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div>
@@ -4200,7 +4200,7 @@ function ProjectDetailView({
             </div>
             <Button
               onClick={handleCreateElement}
-              className="w-full bg-[#5BA4B4] hover:bg-[#4A8A98] text-white"
+              className="w-full bg-[#3D4F5F] hover:bg-[#2D3F4F] text-white"
               disabled={!newElementName.trim() || !newElementTipo}
             >
               Crear Elemento
@@ -4213,7 +4213,7 @@ function ProjectDetailView({
       <Dialog open={isEditElementOpen} onOpenChange={setIsEditElementOpen}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-[#5BA4B4]">Editar Elemento</DialogTitle>
+            <DialogTitle className="text-[#3D4F5F]">Editar Elemento</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div>
@@ -4253,7 +4253,7 @@ function ProjectDetailView({
             </div>
             <Button
               onClick={handleUpdateElement}
-              className="w-full bg-[#5BA4B4] hover:bg-[#4A8A98] text-white"
+              className="w-full bg-[#3D4F5F] hover:bg-[#2D3F4F] text-white"
               disabled={!editElementName.trim() || !editElementTipo}
             >
               Actualizar Elemento

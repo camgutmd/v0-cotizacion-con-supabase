@@ -10,8 +10,8 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  /* Updated primary color to teal/turquoise #5BA4B4 */
-  --primary: oklch(0.65 0.08 210);
+  /* Updated primary color to dark blue #3D4F5F */
+  --primary: oklch(0.38 0.03 230);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
@@ -23,8 +23,8 @@
   --destructive-foreground: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
-  /* Updated ring color to match teal theme */
-  --ring: oklch(0.65 0.08 210);
+  /* Updated ring color to match dark blue theme */
+  --ring: oklch(0.38 0.03 230);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -33,13 +33,13 @@
   --radius: 0.625rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
-  /* Updated sidebar primary to teal */
-  --sidebar-primary: oklch(0.65 0.08 210);
+  /* Updated sidebar primary to dark blue */
+  --sidebar-primary: oklch(0.38 0.03 230);
   --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.97 0 0);
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.65 0.08 210);
+  --sidebar-ring: oklch(0.38 0.03 230);
 }
 
 .dark {

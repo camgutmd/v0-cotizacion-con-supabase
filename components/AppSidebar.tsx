@@ -76,7 +76,7 @@ export function AppSidebar({ activeView, onNavigate }: AppSidebarProps) {
                       className={`
                         w-full justify-start gap-3 px-3 py-2 rounded-lg transition-colors
                         ${activeView === item.id 
-                          ? "bg-[#5BA4B4] text-white hover:bg-[#4a8a98] hover:text-white" 
+                          ? "bg-[#3D4F5F] text-white hover:bg-[#2D3F4F] hover:text-white" 
                           : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                         }
                       `}
@@ -105,7 +105,7 @@ export function AppSidebar({ activeView, onNavigate }: AppSidebarProps) {
                       className={`
                         w-full justify-start gap-3 px-3 py-2 rounded-lg transition-colors
                         ${activeView === item.id 
-                          ? "bg-[#5BA4B4] text-white hover:bg-[#4a8a98] hover:text-white" 
+                          ? "bg-[#3D4F5F] text-white hover:bg-[#2D3F4F] hover:text-white" 
                           : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                         }
                       `}
@@ -134,7 +134,7 @@ export function AppSidebar({ activeView, onNavigate }: AppSidebarProps) {
                       className={`
                         w-full justify-start gap-3 px-3 py-2 rounded-lg transition-colors
                         ${activeView === item.id 
-                          ? "bg-[#5BA4B4] text-white hover:bg-[#4a8a98] hover:text-white" 
+                          ? "bg-[#3D4F5F] text-white hover:bg-[#2D3F4F] hover:text-white" 
                           : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                         }
                       `}
