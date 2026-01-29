@@ -1538,7 +1538,7 @@ if (!error && newProj) {
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr style={{ backgroundColor: "rgb(91, 164, 180)" }}>
+                  <tr className="bg-[#3D5A6E]">
                     <th className="px-6 py-4 text-left text-sm font-semibold text-white">Categoría</th>
                     <th className="px-6 py-4 text-left text-sm font-semibold text-white">Subcategoría</th>
                     <th className="px-6 py-4 text-left text-sm font-semibold text-white">Item</th>
