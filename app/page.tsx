@@ -1543,7 +1543,7 @@ if (!error && newProj) {
                     <th className="px-6 py-4 text-left text-sm font-semibold text-white">Subcategoría</th>
                     <th className="px-6 py-4 text-left text-sm font-semibold text-white">Item</th>
                     <th className="px-6 py-4 text-left text-sm font-semibold text-white">Proveedor</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-white">Costo</th>
+                    <th className="px-6 py-4 text-right text-sm font-semibold text-white">Costo</th>
                     <th className="px-6 py-4 text-left text-sm font-semibold text-white">Acciones</th>
                   </tr>
                 </thead>
@@ -1574,7 +1574,7 @@ if (!error && newProj) {
                         <td className="px-6 py-4 text-sm text-gray-900">{product.Subcategoria}</td>
                         <td className="px-6 py-4 text-sm text-gray-900">{product.Item}</td>
                         <td className="px-6 py-4 text-sm text-gray-900">{product.Proveedor}</td>
-                        <td className="px-6 py-4 text-sm font-semibold text-[#3D5A6E]">
+                        <td className="px-6 py-4 text-sm font-semibold text-[#3D5A6E] text-right">
                           {formatCurrency(product.Costo)}
                         </td>
                         <td className="px-6 py-4 text-sm">
@@ -2253,7 +2253,7 @@ if (!error && newProj) {
               <div className="col-span-2">Nombre</div>
               <div className="col-span-2">Cliente</div>
               <div className="col-span-2">Descripción</div>
-              <div className="col-span-2">Total Venta</div>
+              <div className="col-span-2 text-right">Total Venta</div>
               <div className="col-span-1">Estatus</div>
               <div className="col-span-1">
                 <div>Fecha</div>
@@ -2277,8 +2277,8 @@ if (!error && newProj) {
                 <div className="col-span-2 font-semibold text-black truncate">{project.nombre}</div>
                 <div className="col-span-2 text-sm text-gray-700 truncate">{project.cliente || "-"}</div>
                 <div className="col-span-2 text-sm text-gray-600 truncate">{project.descripcion || "-"}</div>
-                <div className="col-span-2 text-[#3D5A6E] font-semibold">
-                  {formatCurrency(projectTotals[project.id] || 0)}
+<div className="col-span-2 text-[#3D5A6E] font-semibold text-right">
+                          {formatCurrency(projectTotals[project.id] || 0)}
                 </div>
                 {/* </CHANGE> */}
                 <div className="col-span-1">
