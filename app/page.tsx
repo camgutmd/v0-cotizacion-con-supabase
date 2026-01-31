@@ -2251,8 +2251,8 @@ if (!error && newProj) {
             {/* Table Header */}
             <div className="grid grid-cols-13 gap-4 px-4 py-3 bg-[#3D5A6E] text-white font-semibold rounded-t-lg text-sm">
               <div className="col-span-2">Nombre</div>
-              <div className="col-span-2">Cliente</div>
-              <div className="col-span-2">Descripción</div>
+              <div className="col-span-1">Cliente</div>
+              <div className="col-span-3">Descripción</div>
               <div className="col-span-2 text-right">Total Venta</div>
               <div className="col-span-1">Estatus</div>
               <div className="col-span-1">
