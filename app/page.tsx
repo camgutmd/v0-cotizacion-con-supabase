@@ -1574,7 +1574,7 @@ if (!error && newProj) {
                         <td className="px-6 py-4 text-sm text-gray-900">{product.Subcategoria}</td>
                         <td className="px-6 py-4 text-sm text-gray-900">{product.Item}</td>
                         <td className="px-6 py-4 text-sm text-gray-900">{product.Proveedor}</td>
-                        <td className="px-6 py-4 text-sm font-semibold" style={{ color: "rgb(91, 164, 180)" }}>
+                        <td className="px-6 py-4 text-sm font-semibold text-[#3D5A6E]">
                           {formatCurrency(product.Costo)}
                         </td>
                         <td className="px-6 py-4 text-sm">
