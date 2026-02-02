@@ -2249,54 +2249,53 @@ if (!error && newProj) {
         ) : (
           <div className="space-y-2">
             {/* Table Header */}
-            <div className="grid grid-cols-13 gap-4 px-4 py-3 bg-[#3D5A6E] text-white font-semibold rounded-t-lg text-sm">
+            <div className="grid grid-cols-14 gap-4 px-4 py-3 bg-[#3D5A6E] text-white font-semibold rounded-t-lg text-sm">
               <div className="col-span-2">Nombre</div>
               <div className="col-span-1">Cliente</div>
               <div className="col-span-3">Descripción</div>
-              <div className="col-span-2 text-right">Total Venta</div>
-              <div className="col-span-1 text-center">Estatus</div>
-              <div className="col-span-1 text-center">
+              <div className="col-span-2 text-right pr-4">Total Venta</div>
+              <div className="col-span-1 text-right">Estatus</div>
+              <div className="col-span-1 text-right">
                 <div>Fecha</div>
                 <div>Creación</div>
               </div>
-              <div className="col-span-1 text-center">
+              <div className="col-span-1 text-right">
                 <div>Ultimo</div>
                 <div>Cambio</div>
               </div>
-              <div className="col-span-1 text-center">Acciones</div>
+              <div className="col-span-3 text-right">Acciones</div>
             </div>
 
             {/* Table Rows */}
             {sortedAndFilteredProjects.map((project) => (
               <div
                 key={project.id}
-                className="grid grid-cols-13 gap-4 px-4 py-3 border border-[#3D5A6E]/20 hover:bg-[#3D5A6E]/5 transition-colors cursor-pointer rounded-lg items-center"
+                className="grid grid-cols-14 gap-4 px-4 py-3 border border-[#3D5A6E]/20 hover:bg-[#3D5A6E]/5 transition-colors cursor-pointer rounded-lg items-center"
                 onClick={() => setSelectedProject(project)}
                 data-project-detail // Added for selecting project detail view
               >
                 <div className="col-span-2 font-semibold text-black truncate">{project.nombre}</div>
                 <div className="col-span-1 text-sm text-gray-700 truncate">{project.cliente || "-"}</div>
                 <div className="col-span-3 text-sm text-gray-600 truncate">{project.descripcion || "-"}</div>
-<div className="col-span-2 text-[#3D5A6E] font-semibold text-right">
+<div className="col-span-2 text-[#3D5A6E] font-semibold text-right pr-4">
                           {formatCurrency(projectTotals[project.id] || 0)}
                 </div>
-                {/* </CHANGE> */}
-                <div className="col-span-1 text-center">
+                <div className="col-span-1 text-right">
                   <span
                     className={`text-xs ${STATUS_CONFIG[project.estatus as keyof typeof STATUS_CONFIG]?.color || ""}`}
                   >
                     {project.estatus}
                   </span>
                 </div>
-                <div className="col-span-1 text-xs text-gray-600 text-center">
+                <div className="col-span-1 text-xs text-gray-600 text-right">
                   <div>{formatDateInSpanish(project.created_at, "short")}</div>
                   <div>{formatDateInSpanish(project.created_at, "year")}</div>
                 </div>
-                <div className="col-span-1 text-xs text-gray-600 text-center">
+                <div className="col-span-1 text-xs text-gray-600 text-right">
                   <div>{formatDateInSpanish(project.updated_at, "short")}</div>
                   <div>{formatDateInSpanish(project.updated_at, "year")}</div>
                 </div>
-                <div className="col-span-1 flex items-center justify-center gap-2" onClick={(e) => e.stopPropagation()}>
+                <div className="col-span-3 flex items-center justify-end gap-2" onClick={(e) => e.stopPropagation()}>
                   <Button
                     variant="ghost"
                     size="icon"
