@@ -2254,16 +2254,16 @@ if (!error && newProj) {
               <div className="col-span-1">Cliente</div>
               <div className="col-span-3">Descripción</div>
               <div className="col-span-2 text-right">Total Venta</div>
-              <div className="col-span-1">Estatus</div>
-              <div className="col-span-1">
+              <div className="col-span-1 text-center">Estatus</div>
+              <div className="col-span-1 text-center">
                 <div>Fecha</div>
                 <div>Creación</div>
               </div>
-              <div className="col-span-1">
+              <div className="col-span-1 text-center">
                 <div>Ultimo</div>
                 <div>Cambio</div>
               </div>
-              <div className="col-span-2 text-right">Acciones</div>
+              <div className="col-span-1 text-center">Acciones</div>
             </div>
 
             {/* Table Rows */}
@@ -2281,22 +2281,22 @@ if (!error && newProj) {
                           {formatCurrency(projectTotals[project.id] || 0)}
                 </div>
                 {/* </CHANGE> */}
-                <div className="col-span-1">
+                <div className="col-span-1 text-center">
                   <span
                     className={`text-xs ${STATUS_CONFIG[project.estatus as keyof typeof STATUS_CONFIG]?.color || ""}`}
                   >
                     {project.estatus}
                   </span>
                 </div>
-                <div className="col-span-1 text-xs text-gray-600">
+                <div className="col-span-1 text-xs text-gray-600 text-center">
                   <div>{formatDateInSpanish(project.created_at, "short")}</div>
                   <div>{formatDateInSpanish(project.created_at, "year")}</div>
                 </div>
-                <div className="col-span-1 text-xs text-gray-600">
+                <div className="col-span-1 text-xs text-gray-600 text-center">
                   <div>{formatDateInSpanish(project.updated_at, "short")}</div>
                   <div>{formatDateInSpanish(project.updated_at, "year")}</div>
                 </div>
-                <div className="col-span-2 flex items-center justify-end gap-2" onClick={(e) => e.stopPropagation()}>
+                <div className="col-span-1 flex items-center justify-center gap-2" onClick={(e) => e.stopPropagation()}>
                   <Button
                     variant="ghost"
                     size="icon"
