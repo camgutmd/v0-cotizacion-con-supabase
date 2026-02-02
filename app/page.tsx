@@ -2275,8 +2275,8 @@ if (!error && newProj) {
                 data-project-detail // Added for selecting project detail view
               >
                 <div className="col-span-2 font-semibold text-black truncate">{project.nombre}</div>
-                <div className="col-span-2 text-sm text-gray-700 truncate">{project.cliente || "-"}</div>
-                <div className="col-span-2 text-sm text-gray-600 truncate">{project.descripcion || "-"}</div>
+                <div className="col-span-1 text-sm text-gray-700 truncate">{project.cliente || "-"}</div>
+                <div className="col-span-3 text-sm text-gray-600 truncate">{project.descripcion || "-"}</div>
 <div className="col-span-2 text-[#3D5A6E] font-semibold text-right">
                           {formatCurrency(projectTotals[project.id] || 0)}
                 </div>
