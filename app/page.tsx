@@ -3162,13 +3162,16 @@ function ProjectDetailView({
       await new Promise((resolve, reject) => {
         logoImg.onload = () => {
           try {
-            const canvas = document.createElement("canvas")
-            canvas.width = logoImg.width
-            canvas.height = logoImg.height
-            const ctx = canvas.getContext("2d")
-            if (ctx) {
-              ctx.drawImage(logoImg, 0, 0)
-              const dataUrl = canvas.toDataURL("image/jpeg")
+          const canvas = document.createElement("canvas")
+          canvas.width = logoImg.width
+          canvas.height = logoImg.height
+          const ctx = canvas.getContext("2d")
+          if (ctx) {
+            // Fill with white background first (PNG transparency fix for JPEG)
+            ctx.fillStyle = "#FFFFFF"
+            ctx.fillRect(0, 0, canvas.width, canvas.height)
+            ctx.drawImage(logoImg, 0, 0)
+            const dataUrl = canvas.toDataURL("image/jpeg")
 
               const logoWidth = 45
               const logoHeight = (logoImg.height / logoImg.width) * logoWidth
@@ -3187,14 +3190,14 @@ function ProjectDetailView({
     } catch (error) {
       pdf.setFontSize(16)
       pdf.setFont("helvetica", "bold")
-      pdf.setTextColor(91, 164, 180)
+      pdf.setTextColor(61, 90, 110)
       pdf.text("Mate", margin, yPosition + 8)
       pdf.setFontSize(14)
       pdf.setFont("helvetica", "normal")
       pdf.text("Millworkers", margin, yPosition + 15)
     }
 
-    pdf.setTextColor(91, 164, 180)
+    pdf.setTextColor(61, 90, 110)
     pdf.setFontSize(24)
     pdf.setFont("helvetica", "bold")
     pdf.text("Cotización de Proyecto", pageWidth - margin, yPosition + 12, { align: "right" })
@@ -3204,7 +3207,7 @@ function ProjectDetailView({
     drawCard(margin, yPosition, pageWidth - margin * 2, 52)
     yPosition += 5
 
-    pdf.setTextColor(91, 164, 180)
+    pdf.setTextColor(61, 90, 110)
     pdf.setFontSize(14)
     pdf.setFont("helvetica", "bold")
     pdf.text("Información del Proyecto", margin + 5, yPosition + 5)
@@ -3274,7 +3277,7 @@ function ProjectDetailView({
 
     yPosition += fieldSpacing * Math.max(descLines.length - 1, 0) + 25
 
-    pdf.setTextColor(91, 164, 180)
+    pdf.setTextColor(61, 90, 110)
     pdf.setFontSize(14)
     pdf.setFont("helvetica", "bold")
     pdf.text("Elementos del Proyecto", margin, yPosition)
@@ -3343,7 +3346,7 @@ function ProjectDetailView({
     }
 
     yPosition += 5
-    pdf.setDrawColor(105, 159, 177)
+    pdf.setDrawColor(61, 90, 110)
     pdf.setLineWidth(1)
     pdf.line(margin + 5, yPosition, pageWidth - margin - 5, yPosition)
     yPosition += 10
@@ -3959,7 +3962,7 @@ function ProjectDetailView({
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div>
                   <p className="text-xs text-gray-500">Cliente</p>
-                  <p className="font-medium">{project.cliente_nombre || "Sin asignar"}</p>
+                  <p className="font-medium">{project.cliente || "Sin asignar"}</p>
                 </div>
                 <div>
                   <p className="text-xs text-gray-500">Descripción</p>
