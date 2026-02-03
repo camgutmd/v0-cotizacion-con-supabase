@@ -3351,7 +3351,7 @@ function ProjectDetailView({
     pdf.line(margin + 5, yPosition, pageWidth - margin - 5, yPosition)
     yPosition += 10
 
-    pdf.setTextColor(13, 13, 136)
+    pdf.setTextColor(0, 0, 0)
     pdf.setFont("helvetica", "bold")
     pdf.setFontSize(11)
     pdf.text("Subtotal:", margin + 5, yPosition)
@@ -3373,7 +3373,7 @@ function ProjectDetailView({
 
     pdf.setFont("helvetica", "bold")
     pdf.setFontSize(12)
-    pdf.setTextColor(105, 159, 177)
+    pdf.setTextColor(61, 90, 110)
     pdf.text("Total del Proyecto:", margin + 5, yPosition)
     const totalText = formatPDFCurrency(total)
     pdf.text(totalText, pageWidth - margin - 5, yPosition, { align: "right" })
