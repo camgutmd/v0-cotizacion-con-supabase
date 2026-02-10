@@ -9,6 +9,8 @@ import {
   ListTodo,
   Calendar,
   Settings,
+  DollarSign,
+  Truck,
 } from "lucide-react"
 import {
   Sidebar,
@@ -29,7 +31,7 @@ import {
   TooltipProvider,
 } from "@/components/ui/tooltip"
 
-type ActiveView = "dashboard" | "proyectos" | "clientes" | "leads" | "productos" | "tareas" | "calendario" | "configuracion"
+type ActiveView = "dashboard" | "proyectos" | "clientes" | "leads" | "productos" | "costos" | "proveedores" | "tareas" | "calendario" | "configuracion"
 
 interface AppSidebarProps {
   activeView: ActiveView
