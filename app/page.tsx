@@ -36,7 +36,38 @@ import Dashboard from "@/components/Dashboard"
 import { AppSidebar } from "@/components/AppSidebar"
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar"
 
-type ActiveView = "dashboard" | "proyectos" | "clientes" | "leads" | "productos" | "tareas" | "calendario" | "configuracion"
+type ActiveView = "dashboard" | "proyectos" | "clientes" | "leads" | "productos" | "costos" | "proveedores" | "tareas" | "calendario" | "configuracion"
+
+type Proveedor = {
+  id: string
+  nombre: string
+  contacto: string | null
+  telefono: string | null
+  correo: string | null
+  created_at: string
+}
+
+type CostCategory = {
+  id: string
+  categoria: string
+  subcategoria: string
+}
+
+type Costo = {
+  id: string
+  project_id: string | null
+  categoria_id: string
+  proveedor_id: string | null
+  descripcion: string | null
+  monto: number
+  fecha: string
+  created_at: string
+  // joined fields
+  categoria?: string
+  subcategoria?: string
+  proveedor_nombre?: string
+  proyecto_nombre?: string
+}
 
 const formatDateInSpanish = (dateString: string, formatType: "short" | "year" | "full"): string => {
   const months = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"]
@@ -268,6 +299,41 @@ export default function QuotationApp() {
   const [selectedClient, setSelectedClient] = useState<Client | null>(null)
   const [clientProjects, setClientProjects] = useState<Project[]>([])
 
+  // Proveedores state
+  const [proveedores, setProveedores] = useState<Proveedor[]>([])
+  const [proveedorSearchTerm, setProveedorSearchTerm] = useState("")
+  const [showProveedorDialog, setShowProveedorDialog] = useState(false)
+  const [editingProveedor, setEditingProveedor] = useState<Proveedor | null>(null)
+  const [newProveedor, setNewProveedor] = useState({ nombre: "", contacto: "", telefono: "", correo: "" })
+
+  // Costos state
+  const [costos, setCostos] = useState<Costo[]>([])
+  const [costCategories, setCostCategories] = useState<CostCategory[]>([])
+  const [costoSearchTerm, setCostoSearchTerm] = useState("")
+  const [costoCategoriaFilter, setCostoCategoriaFilter] = useState<string>("all")
+  const [costoSubcategoriaFilter, setCostoSubcategoriaFilter] = useState<string>("all")
+  const [showCostoDialog, setShowCostoDialog] = useState(false)
+  const [editingCosto, setEditingCosto] = useState<Costo | null>(null)
+  const [newCosto, setNewCosto] = useState({
+    categoria_id: "",
+    project_id: "",
+    proveedor_id: "",
+    descripcion: "",
+    monto: "",
+    fecha: new Date().toISOString().split("T")[0],
+  })
+  // Costos inside project detail
+  const [projectCostos, setProjectCostos] = useState<Costo[]>([])
+  const [showProjectCostoDialog, setShowProjectCostoDialog] = useState(false)
+  const [editingProjectCosto, setEditingProjectCosto] = useState<Costo | null>(null)
+  const [newProjectCosto, setNewProjectCosto] = useState({
+    categoria_id: "",
+    proveedor_id: "",
+    descripcion: "",
+    monto: "",
+    fecha: new Date().toISOString().split("T")[0],
+  })
+
   useEffect(() => {
     loadProjects()
   }, [])
@@ -309,6 +375,175 @@ export default function QuotationApp() {
       fetchAllProducts()
     }
   }, [activeView])
+
+  // Load proveedores
+  const fetchProveedores = async () => {
+    const { data, error } = await supabase.from("proveedores").select("*").order("nombre", { ascending: true })
+    if (!error) setProveedores(data || [])
+  }
+
+  // Load cost categories
+  const fetchCostCategories = async () => {
+    const { data, error } = await supabase.from("cost_categories").select("*").order("categoria", { ascending: true })
+    if (!error) setCostCategories(data || [])
+  }
+
+  // Load costos with joins
+  const fetchCostos = async () => {
+    const { data, error } = await supabase
+      .from("costos")
+      .select("*, cost_categories(categoria, subcategoria), proveedores(nombre), projects(nombre)")
+      .order("fecha", { ascending: false })
+    if (!error) {
+      const mapped = (data || []).map((c: any) => ({
+        ...c,
+        categoria: c.cost_categories?.categoria,
+        subcategoria: c.cost_categories?.subcategoria,
+        proveedor_nombre: c.proveedores?.nombre,
+        proyecto_nombre: c.projects?.nombre,
+      }))
+      setCostos(mapped)
+    }
+  }
+
+  // Load costos for a specific project
+  const fetchProjectCostos = async (projectId: string) => {
+    const { data, error } = await supabase
+      .from("costos")
+      .select("*, cost_categories(categoria, subcategoria), proveedores(nombre)")
+      .eq("project_id", projectId)
+      .order("fecha", { ascending: false })
+    if (!error) {
+      const mapped = (data || []).map((c: any) => ({
+        ...c,
+        categoria: c.cost_categories?.categoria,
+        subcategoria: c.cost_categories?.subcategoria,
+        proveedor_nombre: c.proveedores?.nombre,
+      }))
+      setProjectCostos(mapped)
+    }
+  }
+
+  // Save proveedor (create or update)
+  const handleSaveProveedor = async () => {
+    if (!newProveedor.nombre.trim()) return
+    if (editingProveedor) {
+      await supabase.from("proveedores").update({
+        nombre: newProveedor.nombre,
+        contacto: newProveedor.contacto || null,
+        telefono: newProveedor.telefono || null,
+        correo: newProveedor.correo || null,
+      }).eq("id", editingProveedor.id)
+    } else {
+      await supabase.from("proveedores").insert({
+        nombre: newProveedor.nombre,
+        contacto: newProveedor.contacto || null,
+        telefono: newProveedor.telefono || null,
+        correo: newProveedor.correo || null,
+      })
+    }
+    setShowProveedorDialog(false)
+    setEditingProveedor(null)
+    setNewProveedor({ nombre: "", contacto: "", telefono: "", correo: "" })
+    fetchProveedores()
+  }
+
+  // Delete proveedor
+  const handleDeleteProveedor = async (id: string) => {
+    if (!confirm("Estas seguro de eliminar este proveedor?")) return
+    await supabase.from("proveedores").delete().eq("id", id)
+    fetchProveedores()
+  }
+
+  // Save costo (create or update) - from main Costos page
+  const handleSaveCosto = async () => {
+    if (!newCosto.categoria_id || !newCosto.monto) return
+    const payload = {
+      categoria_id: newCosto.categoria_id,
+      project_id: newCosto.project_id || null,
+      proveedor_id: newCosto.proveedor_id || null,
+      descripcion: newCosto.descripcion || null,
+      monto: Number(newCosto.monto) || 0,
+      fecha: newCosto.fecha,
+    }
+    if (editingCosto) {
+      await supabase.from("costos").update(payload).eq("id", editingCosto.id)
+    } else {
+      await supabase.from("costos").insert(payload)
+    }
+    setShowCostoDialog(false)
+    setEditingCosto(null)
+    setNewCosto({ categoria_id: "", project_id: "", proveedor_id: "", descripcion: "", monto: "", fecha: new Date().toISOString().split("T")[0] })
+    fetchCostos()
+    // Also update utilidad_real if linked to a project
+    if (payload.project_id) {
+      recalcUtilidad(payload.project_id)
+    }
+  }
+
+  // Delete costo
+  const handleDeleteCosto = async (costo: Costo) => {
+    if (!confirm("Estas seguro de eliminar este costo?")) return
+    await supabase.from("costos").delete().eq("id", costo.id)
+    fetchCostos()
+    if (costo.project_id) {
+      recalcUtilidad(costo.project_id)
+      fetchProjectCostos(costo.project_id)
+    }
+  }
+
+  // Save costo from inside project detail
+  const handleSaveProjectCosto = async () => {
+    if (!selectedProject || !newProjectCosto.categoria_id || !newProjectCosto.monto) return
+    const payload = {
+      categoria_id: newProjectCosto.categoria_id,
+      project_id: selectedProject.id,
+      proveedor_id: newProjectCosto.proveedor_id || null,
+      descripcion: newProjectCosto.descripcion || null,
+      monto: Number(newProjectCosto.monto) || 0,
+      fecha: newProjectCosto.fecha,
+    }
+    if (editingProjectCosto) {
+      await supabase.from("costos").update(payload).eq("id", editingProjectCosto.id)
+    } else {
+      await supabase.from("costos").insert(payload)
+    }
+    setShowProjectCostoDialog(false)
+    setEditingProjectCosto(null)
+    setNewProjectCosto({ categoria_id: "", proveedor_id: "", descripcion: "", monto: "", fecha: new Date().toISOString().split("T")[0] })
+    fetchProjectCostos(selectedProject.id)
+    recalcUtilidad(selectedProject.id)
+  }
+
+  // Recalculate utilidad_real for a project based on costos reales
+  const recalcUtilidad = async (projectId: string) => {
+    const { data } = await supabase.from("costos").select("monto").eq("project_id", projectId)
+    const totalCostos = (data || []).reduce((sum, c) => sum + (c.monto || 0), 0)
+    const totalVenta = projectTotals[projectId] || 0
+    const utilidadReal = totalVenta - totalCostos
+    await supabase.from("projects").update({ utilidad_real: utilidadReal }).eq("id", projectId)
+    loadProjects()
+  }
+
+  useEffect(() => {
+    if (activeView === "proveedores") {
+      fetchProveedores()
+    }
+    if (activeView === "costos") {
+      fetchCostos()
+      fetchCostCategories()
+      fetchProveedores()
+    }
+  }, [activeView])
+
+  // Load categories and proveedores when project detail needs costos
+  useEffect(() => {
+    if (selectedProject) {
+      fetchProjectCostos(selectedProject.id)
+      fetchCostCategories()
+      fetchProveedores()
+    }
+  }, [selectedProject])
 
   const fetchLeads = async () => {
     try {
@@ -1646,6 +1881,301 @@ if (!error && newProj) {
           initialProductData={isEditingProduct ? editingProductData : newProductData}
         />
           </div>
+        </SidebarInset>
+      </SidebarProvider>
+    )
+  }
+
+  {/* ========== PROVEEDORES VIEW ========== */}
+  if (activeView === "proveedores" && !selectedProject) {
+    const filteredProveedores = proveedores.filter((p) =>
+      p.nombre.toLowerCase().includes(proveedorSearchTerm.toLowerCase()) ||
+      (p.contacto || "").toLowerCase().includes(proveedorSearchTerm.toLowerCase())
+    )
+    return (
+      <SidebarProvider>
+        <AppSidebar activeView={activeView} onNavigate={(view) => { setActiveView(view); setSelectedProject(null); }} />
+        <SidebarInset>
+          <div className="min-h-screen bg-gray-50">
+            <div className="w-full px-8 py-8">
+              <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-4">
+                  <SidebarTrigger className="text-[#3D5A6E]" />
+                  <h1 className="text-3xl font-bold text-[#3D5A6E]">Proveedores</h1>
+                </div>
+                <Image src="/mate-living-logo.png" alt="Mate Living" width={200} height={24} className="h-11 w-auto" />
+              </div>
+              <div className="mb-6 flex flex-wrap gap-4 items-center">
+                <Input placeholder="Buscar proveedores..." value={proveedorSearchTerm} onChange={(e) => setProveedorSearchTerm(e.target.value)} className="max-w-xs" />
+                <Button onClick={() => { setEditingProveedor(null); setNewProveedor({ nombre: "", contacto: "", telefono: "", correo: "" }); setShowProveedorDialog(true); }} className="bg-[#3D5A6E] hover:bg-[#2D4A5E] text-white ml-auto">
+                  <Plus className="mr-2 h-4 w-4" /> Nuevo Proveedor
+                </Button>
+              </div>
+              <Card>
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="bg-[#3D5A6E]">
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-white">Nombre</th>
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-white">Contacto</th>
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-white">Telefono</th>
+                        <th className="px-6 py-4 text-left text-sm font-semibold text-white">Correo</th>
+                        <th className="px-6 py-4 text-center text-sm font-semibold text-white">Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredProveedores.map((prov) => (
+                        <tr key={prov.id} className="border-b hover:bg-gray-50">
+                          <td className="px-6 py-4 text-sm font-medium">{prov.nombre}</td>
+                          <td className="px-6 py-4 text-sm text-gray-600">{prov.contacto || "-"}</td>
+                          <td className="px-6 py-4 text-sm text-gray-600">{prov.telefono || "-"}</td>
+                          <td className="px-6 py-4 text-sm text-gray-600">{prov.correo || "-"}</td>
+                          <td className="px-6 py-4">
+                            <div className="flex justify-center gap-2">
+                              <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-500 hover:text-[#3D5A6E]" onClick={() => { setEditingProveedor(prov); setNewProveedor({ nombre: prov.nombre, contacto: prov.contacto || "", telefono: prov.telefono || "", correo: prov.correo || "" }); setShowProveedorDialog(true); }}>
+                                <Pencil className="h-4 w-4" />
+                              </Button>
+                              <Button variant="ghost" size="icon" className="h-8 w-8 text-red-500 hover:text-red-700" onClick={() => handleDeleteProveedor(prov.id)}>
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  {filteredProveedores.length === 0 && <div className="text-center py-8 text-gray-500">No se encontraron proveedores.</div>}
+                </div>
+              </Card>
+            </div>
+          </div>
+          {/* Proveedor Dialog */}
+          <Dialog open={showProveedorDialog} onOpenChange={setShowProveedorDialog}>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle className="text-[#3D5A6E]">{editingProveedor ? "Editar Proveedor" : "Nuevo Proveedor"}</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div><Label>Nombre *</Label><Input value={newProveedor.nombre} onChange={(e) => setNewProveedor({ ...newProveedor, nombre: e.target.value })} /></div>
+                <div><Label>Contacto</Label><Input value={newProveedor.contacto} onChange={(e) => setNewProveedor({ ...newProveedor, contacto: e.target.value })} /></div>
+                <div><Label>Telefono</Label><Input value={newProveedor.telefono} onChange={(e) => setNewProveedor({ ...newProveedor, telefono: e.target.value })} /></div>
+                <div><Label>Correo</Label><Input value={newProveedor.correo} onChange={(e) => setNewProveedor({ ...newProveedor, correo: e.target.value })} /></div>
+                <Button onClick={handleSaveProveedor} className="w-full bg-[#3D5A6E] hover:bg-[#2D4A5E] text-white">{editingProveedor ? "Guardar Cambios" : "Crear Proveedor"}</Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </SidebarInset>
+      </SidebarProvider>
+    )
+  }
+
+  {/* ========== COSTOS VIEW ========== */}
+  if (activeView === "costos" && !selectedProject) {
+    const uniqueCategorias = [...new Set(costCategories.map((c) => c.categoria))]
+    const filteredSubcategorias = costoCategoriaFilter !== "all" ? costCategories.filter((c) => c.categoria === costoCategoriaFilter) : costCategories
+    const uniqueSubcategorias = [...new Set(filteredSubcategorias.map((c) => c.subcategoria))]
+
+    const filteredCostos = costos.filter((c) => {
+      const matchesSearch = !costoSearchTerm || (c.descripcion || "").toLowerCase().includes(costoSearchTerm.toLowerCase()) || (c.proveedor_nombre || "").toLowerCase().includes(costoSearchTerm.toLowerCase()) || (c.proyecto_nombre || "").toLowerCase().includes(costoSearchTerm.toLowerCase())
+      const matchesCat = costoCategoriaFilter === "all" || c.categoria === costoCategoriaFilter
+      const matchesSub = costoSubcategoriaFilter === "all" || c.subcategoria === costoSubcategoriaFilter
+      return matchesSearch && matchesCat && matchesSub
+    })
+
+    // Category totals for summary
+    const costosByCategoria = costos.reduce((acc, c) => {
+      const cat = c.categoria || "Sin categoria"
+      acc[cat] = (acc[cat] || 0) + c.monto
+      return acc
+    }, {} as Record<string, number>)
+    const totalCostosGeneral = costos.reduce((sum, c) => sum + c.monto, 0)
+
+    // Subcategoria for the selected category in new costo dialog
+    const dialogCatId = newCosto.categoria_id
+    const dialogSelectedCat = costCategories.find((c) => c.id === dialogCatId)
+    const dialogCatName = dialogSelectedCat?.categoria || ""
+    const needsProject = dialogCatName === "Produccion"
+
+    return (
+      <SidebarProvider>
+        <AppSidebar activeView={activeView} onNavigate={(view) => { setActiveView(view); setSelectedProject(null); }} />
+        <SidebarInset>
+          <div className="min-h-screen bg-gray-50">
+            <div className="w-full px-8 py-8">
+              <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-4">
+                  <SidebarTrigger className="text-[#3D5A6E]" />
+                  <h1 className="text-3xl font-bold text-[#3D5A6E]">Costos</h1>
+                </div>
+                <Image src="/mate-living-logo.png" alt="Mate Living" width={200} height={24} className="h-11 w-auto" />
+              </div>
+
+              {/* Summary Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                <Card className="border-l-4 border-l-[#3D5A6E]">
+                  <CardContent className="p-4">
+                    <p className="text-sm text-gray-500">Total Costos</p>
+                    <p className="text-2xl font-bold text-[#3D5A6E]">{formatCurrency(totalCostosGeneral)}</p>
+                  </CardContent>
+                </Card>
+                {Object.entries(costosByCategoria).map(([cat, total]) => (
+                  <Card key={cat}>
+                    <CardContent className="p-4">
+                      <p className="text-sm text-gray-500">{cat}</p>
+                      <p className="text-xl font-bold">{formatCurrency(total)}</p>
+                      <p className="text-xs text-gray-400">{totalCostosGeneral > 0 ? ((total / totalCostosGeneral) * 100).toFixed(1) : 0}%</p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+
+              {/* Filters */}
+              <div className="mb-6 flex flex-wrap gap-4 items-center">
+                <Input placeholder="Buscar costos..." value={costoSearchTerm} onChange={(e) => setCostoSearchTerm(e.target.value)} className="max-w-xs" />
+                <Select value={costoCategoriaFilter} onValueChange={(v) => { setCostoCategoriaFilter(v); setCostoSubcategoriaFilter("all"); }}>
+                  <SelectTrigger className="w-[180px]"><SelectValue placeholder="Categoria" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todas las Categorias</SelectItem>
+                    {uniqueCategorias.map((cat) => <SelectItem key={cat} value={cat}>{cat}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+                <Select value={costoSubcategoriaFilter} onValueChange={setCostoSubcategoriaFilter}>
+                  <SelectTrigger className="w-[180px]"><SelectValue placeholder="Subcategoria" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todas las Subcategorias</SelectItem>
+                    {uniqueSubcategorias.map((sub) => <SelectItem key={sub} value={sub}>{sub}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+                <Button onClick={() => { setEditingCosto(null); setNewCosto({ categoria_id: "", project_id: "", proveedor_id: "", descripcion: "", monto: "", fecha: new Date().toISOString().split("T")[0] }); setShowCostoDialog(true); }} className="bg-[#3D5A6E] hover:bg-[#2D4A5E] text-white ml-auto">
+                  <Plus className="mr-2 h-4 w-4" /> Nuevo Costo
+                </Button>
+              </div>
+
+              {/* Costos Table */}
+              <Card>
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="bg-[#3D5A6E]">
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-white">Fecha</th>
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-white">Categoria</th>
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-white">Subcategoria</th>
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-white">Descripcion</th>
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-white">Proyecto</th>
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-white">Proveedor</th>
+                        <th className="px-4 py-3 text-right text-sm font-semibold text-white">Monto</th>
+                        <th className="px-4 py-3 text-center text-sm font-semibold text-white">Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredCostos.map((costo) => (
+                        <tr key={costo.id} className="border-b hover:bg-gray-50">
+                          <td className="px-4 py-3 text-sm">{new Date(costo.fecha).toLocaleDateString("es-CR", { day: "numeric", month: "short", year: "numeric" })}</td>
+                          <td className="px-4 py-3 text-sm">{costo.categoria || "-"}</td>
+                          <td className="px-4 py-3 text-sm">{costo.subcategoria || "-"}</td>
+                          <td className="px-4 py-3 text-sm text-gray-600">{costo.descripcion || "-"}</td>
+                          <td className="px-4 py-3 text-sm">{costo.proyecto_nombre || "-"}</td>
+                          <td className="px-4 py-3 text-sm">{costo.proveedor_nombre || "-"}</td>
+                          <td className="px-4 py-3 text-sm font-semibold text-[#3D5A6E] text-right">{formatCurrency(costo.monto)}</td>
+                          <td className="px-4 py-3">
+                            <div className="flex justify-center gap-2">
+                              <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-500 hover:text-[#3D5A6E]" onClick={() => {
+                                setEditingCosto(costo)
+                                setNewCosto({
+                                  categoria_id: costo.categoria_id,
+                                  project_id: costo.project_id || "",
+                                  proveedor_id: costo.proveedor_id || "",
+                                  descripcion: costo.descripcion || "",
+                                  monto: String(costo.monto),
+                                  fecha: costo.fecha,
+                                })
+                                setShowCostoDialog(true)
+                              }}>
+                                <Pencil className="h-4 w-4" />
+                              </Button>
+                              <Button variant="ghost" size="icon" className="h-8 w-8 text-red-500 hover:text-red-700" onClick={() => handleDeleteCosto(costo)}>
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  {filteredCostos.length === 0 && <div className="text-center py-8 text-gray-500">No se encontraron costos.</div>}
+                </div>
+              </Card>
+            </div>
+          </div>
+          {/* Costo Dialog */}
+          <Dialog open={showCostoDialog} onOpenChange={setShowCostoDialog}>
+            <DialogContent className="sm:max-w-lg">
+              <DialogHeader>
+                <DialogTitle className="text-[#3D5A6E]">{editingCosto ? "Editar Costo" : "Nuevo Costo"}</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div>
+                  <Label>Categoria / Subcategoria *</Label>
+                  <Select value={newCosto.categoria_id} onValueChange={(v) => setNewCosto({ ...newCosto, categoria_id: v, project_id: "" })}>
+                    <SelectTrigger><SelectValue placeholder="Seleccionar categoria" /></SelectTrigger>
+                    <SelectContent>
+                      {costCategories.map((cat) => <SelectItem key={cat.id} value={cat.id}>{cat.categoria} - {cat.subcategoria}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+                {needsProject && (
+                  <div>
+                    <Label>Proyecto Asociado</Label>
+                    <Select value={newCosto.project_id} onValueChange={(v) => setNewCosto({ ...newCosto, project_id: v })}>
+                      <SelectTrigger><SelectValue placeholder="Seleccionar proyecto" /></SelectTrigger>
+                      <SelectContent>
+                        {projects.map((p) => <SelectItem key={p.id} value={p.id}>{p.nombre}</SelectItem>)}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+                <div>
+                  <Label>Proveedor</Label>
+                  <div className="flex gap-2">
+                    <Select value={newCosto.proveedor_id} onValueChange={(v) => setNewCosto({ ...newCosto, proveedor_id: v })}>
+                      <SelectTrigger className="flex-1"><SelectValue placeholder="Seleccionar proveedor" /></SelectTrigger>
+                      <SelectContent>
+                        {proveedores.map((p) => <SelectItem key={p.id} value={p.id}>{p.nombre}</SelectItem>)}
+                      </SelectContent>
+                    </Select>
+                    <Button variant="outline" size="icon" onClick={() => { setEditingProveedor(null); setNewProveedor({ nombre: "", contacto: "", telefono: "", correo: "" }); setShowProveedorDialog(true); }}>
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+                <div><Label>Descripcion</Label><Input value={newCosto.descripcion} onChange={(e) => setNewCosto({ ...newCosto, descripcion: e.target.value })} /></div>
+                <div><Label>Fecha *</Label><Input type="date" value={newCosto.fecha} onChange={(e) => setNewCosto({ ...newCosto, fecha: e.target.value })} /></div>
+                <div>
+                  <Label>Monto *</Label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">&#8353;</span>
+                    <Input type="number" className="pl-8" value={newCosto.monto} onChange={(e) => setNewCosto({ ...newCosto, monto: e.target.value })} />
+                  </div>
+                </div>
+                <Button onClick={handleSaveCosto} className="w-full bg-[#3D5A6E] hover:bg-[#2D4A5E] text-white">{editingCosto ? "Guardar Cambios" : "Crear Costo"}</Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+          {/* Inline proveedor dialog */}
+          <Dialog open={showProveedorDialog} onOpenChange={setShowProveedorDialog}>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle className="text-[#3D5A6E]">{editingProveedor ? "Editar Proveedor" : "Nuevo Proveedor"}</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div><Label>Nombre *</Label><Input value={newProveedor.nombre} onChange={(e) => setNewProveedor({ ...newProveedor, nombre: e.target.value })} /></div>
+                <div><Label>Contacto</Label><Input value={newProveedor.contacto} onChange={(e) => setNewProveedor({ ...newProveedor, contacto: e.target.value })} /></div>
+                <div><Label>Telefono</Label><Input value={newProveedor.telefono} onChange={(e) => setNewProveedor({ ...newProveedor, telefono: e.target.value })} /></div>
+                <div><Label>Correo</Label><Input value={newProveedor.correo} onChange={(e) => setNewProveedor({ ...newProveedor, correo: e.target.value })} /></div>
+                <Button onClick={handleSaveProveedor} className="w-full bg-[#3D5A6E] hover:bg-[#2D4A5E] text-white">{editingProveedor ? "Guardar Cambios" : "Crear Proveedor"}</Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         </SidebarInset>
       </SidebarProvider>
     )
