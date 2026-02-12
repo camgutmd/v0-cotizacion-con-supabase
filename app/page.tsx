@@ -3066,34 +3066,21 @@ if (!error && newProj) {
                 </div>
               </div>
             </div>
-            {["Pagado", "Finalizado"].includes(editingProject?.estatus || "") && (
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="edit-utilidad-real" className="text-[#3D5A6E]">
-                    Utilidad Real
-                  </Label>
-                  <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">₡</span>
-                    <Input
-                      id="edit-utilidad-real"
-                      type="number"
-                      placeholder="0"
-                      value={editingProject?.utilidad_real || 0}
-                      onChange={(e) =>
-                        setEditingProject({ ...editingProject, utilidad_real: Number.parseFloat(e.target.value) || 0 })
-                      }
-                      className="pl-8"
-                    />
-                  </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label className="text-[#3D5A6E]">Utilidad Real</Label>
+                <div className="p-2 bg-gray-100 rounded-md text-right font-medium">
+                  {formatCurrency(editingProject?.utilidad_real || 0)}
                 </div>
-                <div className="space-y-2">
-                  <Label className="text-[#3D5A6E]">Margen Real</Label>
-                  <div className="p-2 bg-gray-100 rounded-md text-right font-medium">
-                    {(((editingProject?.utilidad_real || 0) / (projectTotals[editingProject?.id] || 1)) * 100).toFixed(2)}%
-                  </div>
+                <p className="text-xs text-gray-400">Calculada automaticamente desde Costos Reales</p>
+              </div>
+              <div className="space-y-2">
+                <Label className="text-[#3D5A6E]">Margen Real</Label>
+                <div className="p-2 bg-gray-100 rounded-md text-right font-medium">
+                  {(((editingProject?.utilidad_real || 0) / (projectTotals[editingProject?.id] || 1)) * 100).toFixed(2)}%
                 </div>
               </div>
-            )}
+            </div>
             <div className="space-y-2">
               <Label htmlFor="edit-estatus" className="text-[#3D5A6E]">
                 Estatus <span className="text-red-500">*</span>
@@ -4683,6 +4670,127 @@ function ProjectDetailView({
           </div>
         )}
       </div>
+
+      {/* ========== COSTOS REALES SECTION ========== */}
+      <div className="mt-10 px-8 pb-8">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-bold text-[#3D5A6E]">Costos Reales</h2>
+          <Button onClick={() => { setEditingProjectCosto(null); setNewProjectCosto({ categoria_id: "", proveedor_id: "", descripcion: "", monto: "", fecha: new Date().toISOString().split("T")[0] }); setShowProjectCostoDialog(true); }} className="bg-[#3D5A6E] hover:bg-[#2D4A5E] text-white">
+            <Plus className="mr-2 h-4 w-4" /> Nuevo Costo
+          </Button>
+        </div>
+        {/* Summary */}
+        {(() => {
+          const totalCostosProj = projectCostos.reduce((sum, c) => sum + c.monto, 0)
+          const totalVentaProj = projectTotals[selectedProject?.id || ""] || 0
+          const utilidadRealProj = totalVentaProj - totalCostosProj
+          const margenRealProj = totalVentaProj > 0 ? ((utilidadRealProj / totalVentaProj) * 100) : 0
+          return (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+              <Card><CardContent className="p-4"><p className="text-sm text-gray-500">Total Venta</p><p className="text-lg font-bold text-[#3D5A6E]">{formatCurrency(totalVentaProj)}</p></CardContent></Card>
+              <Card><CardContent className="p-4"><p className="text-sm text-gray-500">Total Costos Reales</p><p className="text-lg font-bold text-red-600">{formatCurrency(totalCostosProj)}</p></CardContent></Card>
+              <Card><CardContent className="p-4"><p className="text-sm text-gray-500">Utilidad Real</p><p className={`text-lg font-bold ${utilidadRealProj >= 0 ? "text-green-600" : "text-red-600"}`}>{formatCurrency(utilidadRealProj)}</p></CardContent></Card>
+              <Card><CardContent className="p-4"><p className="text-sm text-gray-500">Margen Real</p><p className={`text-lg font-bold ${margenRealProj >= 0 ? "text-green-600" : "text-red-600"}`}>{margenRealProj.toFixed(2)}%</p></CardContent></Card>
+            </div>
+          )
+        })()}
+        {/* Costos Table */}
+        <Card>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="bg-[#3D5A6E]">
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-white">Fecha</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-white">Categoria</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-white">Subcategoria</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-white">Descripcion</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-white">Proveedor</th>
+                  <th className="px-4 py-3 text-right text-sm font-semibold text-white">Monto</th>
+                  <th className="px-4 py-3 text-center text-sm font-semibold text-white">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {projectCostos.map((costo) => (
+                  <tr key={costo.id} className="border-b hover:bg-gray-50">
+                    <td className="px-4 py-3 text-sm">{new Date(costo.fecha).toLocaleDateString("es-CR", { day: "numeric", month: "short", year: "numeric" })}</td>
+                    <td className="px-4 py-3 text-sm">{costo.categoria || "-"}</td>
+                    <td className="px-4 py-3 text-sm">{costo.subcategoria || "-"}</td>
+                    <td className="px-4 py-3 text-sm text-gray-600">{costo.descripcion || "-"}</td>
+                    <td className="px-4 py-3 text-sm">{costo.proveedor_nombre || "-"}</td>
+                    <td className="px-4 py-3 text-sm font-semibold text-[#3D5A6E] text-right">{formatCurrency(costo.monto)}</td>
+                    <td className="px-4 py-3">
+                      <div className="flex justify-center gap-2">
+                        <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-500 hover:text-[#3D5A6E]" onClick={() => {
+                          setEditingProjectCosto(costo)
+                          setNewProjectCosto({
+                            categoria_id: costo.categoria_id,
+                            proveedor_id: costo.proveedor_id || "",
+                            descripcion: costo.descripcion || "",
+                            monto: String(costo.monto),
+                            fecha: costo.fecha,
+                          })
+                          setShowProjectCostoDialog(true)
+                        }}>
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button variant="ghost" size="icon" className="h-8 w-8 text-red-500 hover:text-red-700" onClick={async () => {
+                          if (!confirm("Estas seguro de eliminar este costo?")) return
+                          await supabase.from("costos").delete().eq("id", costo.id)
+                          if (selectedProject) {
+                            fetchProjectCostos(selectedProject.id)
+                            recalcUtilidad(selectedProject.id)
+                          }
+                        }}>
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {projectCostos.length === 0 && <div className="text-center py-8 text-gray-500">No hay costos registrados para este proyecto.</div>}
+          </div>
+        </Card>
+      </div>
+      {/* Project Costo Dialog */}
+      <Dialog open={showProjectCostoDialog} onOpenChange={setShowProjectCostoDialog}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="text-[#3D5A6E]">{editingProjectCosto ? "Editar Costo" : "Nuevo Costo"}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label>Categoria / Subcategoria *</Label>
+              <Select value={newProjectCosto.categoria_id} onValueChange={(v) => setNewProjectCosto({ ...newProjectCosto, categoria_id: v })}>
+                <SelectTrigger><SelectValue placeholder="Seleccionar categoria" /></SelectTrigger>
+                <SelectContent>
+                  {costCategories.map((cat) => <SelectItem key={cat.id} value={cat.id}>{cat.categoria} - {cat.subcategoria}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label>Proveedor</Label>
+              <Select value={newProjectCosto.proveedor_id} onValueChange={(v) => setNewProjectCosto({ ...newProjectCosto, proveedor_id: v })}>
+                <SelectTrigger><SelectValue placeholder="Seleccionar proveedor" /></SelectTrigger>
+                <SelectContent>
+                  {proveedores.map((p) => <SelectItem key={p.id} value={p.id}>{p.nombre}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+            <div><Label>Descripcion</Label><Input value={newProjectCosto.descripcion} onChange={(e) => setNewProjectCosto({ ...newProjectCosto, descripcion: e.target.value })} /></div>
+            <div><Label>Fecha *</Label><Input type="date" value={newProjectCosto.fecha} onChange={(e) => setNewProjectCosto({ ...newProjectCosto, fecha: e.target.value })} /></div>
+            <div>
+              <Label>Monto *</Label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">&#8353;</span>
+                <Input type="number" className="pl-8" value={newProjectCosto.monto} onChange={(e) => setNewProjectCosto({ ...newProjectCosto, monto: e.target.value })} />
+              </div>
+            </div>
+            <Button onClick={handleSaveProjectCosto} className="w-full bg-[#3D5A6E] hover:bg-[#2D4A5E] text-white">{editingProjectCosto ? "Guardar Cambios" : "Crear Costo"}</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* New Element Dialog */}
       <Dialog open={isNewElementOpen} onOpenChange={setIsNewElementOpen}>
