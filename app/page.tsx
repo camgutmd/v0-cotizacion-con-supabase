@@ -3629,6 +3629,83 @@ function ProjectDetailView({
   const [editElementImage, setEditElementImage] = useState<File | null>(null)
   const [editImagePreview, setEditImagePreview] = useState<string | null>(null)
 
+  // Costos Reales state
+  const [projectCostos, setProjectCostos] = useState<Costo[]>([])
+  const [costCategories, setCostCategories] = useState<CostCategory[]>([])
+  const [proveedores, setProveedores] = useState<Proveedor[]>([])
+  const [showProjectCostoDialog, setShowProjectCostoDialog] = useState(false)
+  const [editingProjectCosto, setEditingProjectCosto] = useState<Costo | null>(null)
+  const [newProjectCosto, setNewProjectCosto] = useState({
+    categoria_id: "",
+    proveedor_id: "",
+    descripcion: "",
+    monto: "",
+    fecha: new Date().toISOString().split("T")[0],
+  })
+
+  const fetchProjectCostos = async () => {
+    const { data, error } = await supabase
+      .from("costos")
+      .select("*, cost_categories(categoria, subcategoria), proveedores(nombre)")
+      .eq("project_id", project.id)
+      .order("fecha", { ascending: false })
+    if (!error) {
+      const mapped = (data || []).map((c: any) => ({
+        ...c,
+        categoria: c.cost_categories?.categoria,
+        subcategoria: c.cost_categories?.subcategoria,
+        proveedor_nombre: c.proveedores?.nombre,
+      }))
+      setProjectCostos(mapped)
+    }
+  }
+
+  const fetchCostCategories = async () => {
+    const { data } = await supabase.from("cost_categories").select("*").order("categoria")
+    if (data) setCostCategories(data)
+  }
+
+  const fetchProveedores = async () => {
+    const { data } = await supabase.from("proveedores").select("*").order("nombre")
+    if (data) setProveedores(data)
+  }
+
+  const recalcUtilidad = async () => {
+    const { data } = await supabase.from("costos").select("monto").eq("project_id", project.id)
+    const totalCostos = (data || []).reduce((sum, c) => sum + (c.monto || 0), 0)
+    const totalVenta = elements.reduce((sum, el) => sum + (elementTotals[el.id] || 0), 0)
+    const utilidadReal = totalVenta - totalCostos
+    await supabase.from("projects").update({ utilidad_real: utilidadReal }).eq("id", project.id)
+  }
+
+  const handleSaveProjectCosto = async () => {
+    if (!newProjectCosto.categoria_id || !newProjectCosto.monto) return
+    const payload = {
+      categoria_id: newProjectCosto.categoria_id,
+      project_id: project.id,
+      proveedor_id: newProjectCosto.proveedor_id || null,
+      descripcion: newProjectCosto.descripcion || null,
+      monto: Number(newProjectCosto.monto) || 0,
+      fecha: newProjectCosto.fecha,
+    }
+    if (editingProjectCosto) {
+      await supabase.from("costos").update(payload).eq("id", editingProjectCosto.id)
+    } else {
+      await supabase.from("costos").insert(payload)
+    }
+    setShowProjectCostoDialog(false)
+    setEditingProjectCosto(null)
+    setNewProjectCosto({ categoria_id: "", proveedor_id: "", descripcion: "", monto: "", fecha: new Date().toISOString().split("T")[0] })
+    fetchProjectCostos()
+    recalcUtilidad()
+  }
+
+  useEffect(() => {
+    fetchProjectCostos()
+    fetchCostCategories()
+    fetchProveedores()
+  }, [project.id])
+
   const formatCurrency = (amount: number): string => {
     return new Intl.NumberFormat("es-CR", {
       style: "currency",
@@ -4682,7 +4759,7 @@ function ProjectDetailView({
         {/* Summary */}
         {(() => {
           const totalCostosProj = projectCostos.reduce((sum, c) => sum + c.monto, 0)
-          const totalVentaProj = projectTotals[selectedProject?.id || ""] || 0
+          const totalVentaProj = elements.reduce((sum, el) => sum + (elementTotals[el.id] || 0), 0)
           const utilidadRealProj = totalVentaProj - totalCostosProj
           const margenRealProj = totalVentaProj > 0 ? ((utilidadRealProj / totalVentaProj) * 100) : 0
           return (
@@ -4736,10 +4813,8 @@ function ProjectDetailView({
                         <Button variant="ghost" size="icon" className="h-8 w-8 text-red-500 hover:text-red-700" onClick={async () => {
                           if (!confirm("Estas seguro de eliminar este costo?")) return
                           await supabase.from("costos").delete().eq("id", costo.id)
-                          if (selectedProject) {
-                            fetchProjectCostos(selectedProject.id)
-                            recalcUtilidad(selectedProject.id)
-                          }
+                          fetchProjectCostos()
+                          recalcUtilidad()
                         }}>
                           <Trash2 className="h-4 w-4" />
                         </Button>
