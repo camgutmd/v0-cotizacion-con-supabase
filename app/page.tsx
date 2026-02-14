@@ -1325,12 +1325,17 @@ export default function QuotationApp() {
     const blob = new Blob(["\ufeff" + csvContent], { type: "text/csv;charset=utf-8;" })
     const url = URL.createObjectURL(blob)
     const link = document.createElement("a")
-    link.setAttribute("href", url)
-    link.setAttribute("download", `proyectos_${new Date().toISOString().split("T")[0]}.csv`)
+    link.href = url
+    link.download = `proyectos_${new Date().toISOString().split("T")[0]}.csv`
+    link.style.display = "none"
     document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    URL.revokeObjectURL(url)
+    setTimeout(() => {
+      link.click()
+      setTimeout(() => {
+        document.body.removeChild(link)
+        URL.revokeObjectURL(url)
+      }, 100)
+    }, 0)
   }
 
   const formatDate = (dateString: string | null) => {
