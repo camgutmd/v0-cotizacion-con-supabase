@@ -1322,20 +1322,9 @@ export default function QuotationApp() {
       ...rows.map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(",")),
     ].join("\n")
 
-    const blob = new Blob(["\ufeff" + csvContent], { type: "text/csv;charset=utf-8;" })
-    const url = URL.createObjectURL(blob)
-    const link = document.createElement("a")
-    link.href = url
-    link.download = `proyectos_${new Date().toISOString().split("T")[0]}.csv`
-    link.style.display = "none"
-    document.body.appendChild(link)
-    setTimeout(() => {
-      link.click()
-      setTimeout(() => {
-        document.body.removeChild(link)
-        URL.revokeObjectURL(url)
-      }, 100)
-    }, 0)
+    const csvWithBOM = "\ufeff" + csvContent
+    const encodedUri = "data:text/csv;charset=utf-8," + encodeURIComponent(csvWithBOM)
+    window.open(encodedUri, "_blank")
   }
 
   const formatDate = (dateString: string | null) => {
